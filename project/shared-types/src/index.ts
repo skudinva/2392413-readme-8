@@ -1,1 +1,1 @@
-export * from './lib/shared-types';
+export { Entity } from './lib/entity';

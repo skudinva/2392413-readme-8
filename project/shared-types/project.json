@@ -1,9 +1,9 @@
 {
-  "name": "shared-types",
+  "name": "shared",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "shared-types/src",
+  "sourceRoot": "shared/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project shared-types --web",
+  "// targets": "to see all targets run: nx show project shared --web",
   "targets": {}
 }

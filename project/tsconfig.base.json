@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project/shared-types": ["shared-types/src/index.ts"]
+      "@project/shared": ["shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
