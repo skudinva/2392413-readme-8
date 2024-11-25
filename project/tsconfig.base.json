@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project/core": ["libs/shared/core/src/index.ts"]
+      "@project/shared/core": ["libs/shared/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
