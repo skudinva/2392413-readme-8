@@ -10,7 +10,7 @@ export abstract class BaseMemoryRepository<
 
   constructor(protected entityFactory: EntityFactory<T>) {}
 
-  public async findById(id: T['id']): Promise<T> {
+  public async findById(id: T['id']): Promise<T | null> {
     const foundEntity = this.entities.get(id) || null;
     if (!foundEntity) {
       return null;
