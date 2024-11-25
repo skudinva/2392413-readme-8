@@ -1,1 +1,1 @@
-export * from './lib/blog-comment.module';
+export * from './blog-comment-module/blog-comment.module';

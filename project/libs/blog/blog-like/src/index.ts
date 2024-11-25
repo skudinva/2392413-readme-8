@@ -1,1 +1,1 @@
-export * from './lib/blog-like.module';
+export * from './blog-like-module/blog-like.module';
