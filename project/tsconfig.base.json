@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@project/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/helpers": ["libs/shared/helpers/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"]
     }
   },
