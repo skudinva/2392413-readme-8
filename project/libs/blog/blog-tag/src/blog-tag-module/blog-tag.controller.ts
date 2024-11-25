@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('blog-tag')
+@Controller('blog-tag-controller')
 export class BlogTagController {}
