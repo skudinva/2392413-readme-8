@@ -62,36 +62,20 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   }
 
   toPOJO(): Post {
-    const {
-      id,
-      postType,
-      authorId,
-      isRepost,
-      originAuthorId,
-      originPostId,
-      tags,
-      state,
-      createDate,
-      publicDate,
-      likesCount,
-      commentsCount,
-      extraProperty,
-    } = this;
-
     return {
-      id,
-      postType,
-      authorId,
-      isRepost,
-      originAuthorId,
-      originPostId,
-      tags,
-      state,
-      createDate,
-      publicDate,
-      likesCount,
-      commentsCount,
-      extraProperty,
+      id: this.id,
+      postType: this.postType,
+      authorId: this.authorId,
+      isRepost: this.isRepost,
+      originAuthorId: this.originAuthorId,
+      originPostId: this.originPostId,
+      tags: this.tags,
+      state: this.state,
+      createDate: this.createDate,
+      publicDate: this.publicDate,
+      likesCount: this.likesCount,
+      commentsCount: this.commentsCount,
+      extraProperty: this.extraProperty,
     };
   }
 }

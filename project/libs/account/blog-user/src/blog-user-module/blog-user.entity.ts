@@ -28,15 +28,13 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   }
 
   toPOJO(): AuthUser {
-    const { id, email, name, avatar, registerDate, passwordHash } = this;
-
     return {
-      id,
-      email,
-      name,
-      avatar,
-      registerDate,
-      passwordHash,
+      id: this.id,
+      email: this.email,
+      name: this.name,
+      avatar: this.avatar,
+      registerDate: this.registerDate,
+      passwordHash: this.passwordHash,
     };
   }
 

@@ -18,8 +18,6 @@ export class BlogTagEntity extends Entity implements StorableEntity<Tag> {
   }
 
   toPOJO(): Tag {
-    const { id, title } = this;
-
-    return { id, title };
+    return { id: this.id, title: this.title };
   }
 }
