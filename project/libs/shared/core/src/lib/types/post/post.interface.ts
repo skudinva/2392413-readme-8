@@ -1,6 +1,6 @@
-import { PostState } from './post-state.enum';
-import { PostType } from './post-type.enum';
-import { Tag } from './tag.interface';
+import { PostState } from '../post-state.enum';
+import { PostType } from '../post-type.enum';
+import { Tag } from '../tag.interface';
 
 export interface Post<T extends PostType> {
   id?: string;
