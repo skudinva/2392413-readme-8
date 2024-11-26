@@ -1,7 +1,12 @@
-import { PostState, PostType, Tag } from '@project/shared/core';
+import {
+  PostExtraProperty,
+  PostState,
+  PostType,
+  Tag,
+} from '@project/shared/core';
 
-export class CreatePostDto<T extends PostType> {
-  postType!: T;
+export class CreatePostDto {
+  postType!: PostType;
   authorId!: string;
   isRepost!: boolean;
   originAuthorId?: string | undefined;
@@ -9,4 +14,5 @@ export class CreatePostDto<T extends PostType> {
   tags?: Tag[] | undefined;
   state!: PostState;
   publicDate!: Date;
+  extraProperty!: PostExtraProperty[keyof PostExtraProperty];
 }

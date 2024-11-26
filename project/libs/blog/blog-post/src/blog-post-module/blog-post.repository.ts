@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { BaseMemoryRepository } from '@project/data-access';
-import { PostType } from '@project/shared/core';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 
 @Injectable()
-export class BlogPostRepository<
-  T extends PostType
-> extends BaseMemoryRepository<BlogPostEntity<T>> {
-  constructor(entityFactory: BlogPostFactory<T>) {
+export class BlogPostRepository extends BaseMemoryRepository<BlogPostEntity> {
+  constructor(entityFactory: BlogPostFactory) {
     super(entityFactory);
   }
 
-  public async findByTag(tag: string): Promise<BlogPostEntity<T> | null> {
+  public async findByTag(tag: string): Promise<BlogPostEntity | null> {
     const entities = Array.from(this.entities.values());
     const post = entities.find(
       (entity) =>

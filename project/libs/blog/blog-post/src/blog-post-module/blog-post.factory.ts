@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EntityFactory, Post, PostType } from '@project/shared/core';
+import { EntityFactory, Post } from '@project/shared/core';
 import { BlogPostEntity } from './blog-post.entity';
 
 @Injectable()
-export class BlogPostFactory<T extends PostType>
-  implements EntityFactory<BlogPostEntity<T>>
-{
-  create(entityPlainData: Post<T>): BlogPostEntity<T> {
+export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
+  create(entityPlainData: Post): BlogPostEntity {
     return new BlogPostEntity(entityPlainData);
   }
 }

@@ -1,8 +1,13 @@
-import { PostState, PostType, Tag } from '@project/shared/core';
+import {
+  PostExtraProperty,
+  PostState,
+  PostType,
+  Tag,
+} from '@project/shared/core';
 
-export class UpdatePostDto<T extends PostType> {
+export class UpdatePostDto {
   id!: string;
-  postType!: T;
+  postType!: PostType;
   authorId!: string;
   isRepost!: boolean;
   originAuthorId?: string | undefined;
@@ -10,4 +15,5 @@ export class UpdatePostDto<T extends PostType> {
   tags?: Tag[] | undefined;
   state!: PostState;
   publicDate!: Date;
+  extraProperty!: PostExtraProperty[keyof PostExtraProperty];
 }

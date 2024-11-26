@@ -1,17 +1,15 @@
 import {
   Entity,
   Post,
+  PostExtraProperty,
   PostState,
   PostType,
   StorableEntity,
   Tag,
 } from '@project/shared/core';
 
-export class BlogPostEntity<T extends PostType>
-  extends Entity
-  implements StorableEntity<Post<T>>
-{
-  public postType!: T;
+export class BlogPostEntity extends Entity implements StorableEntity<Post> {
+  public postType!: PostType;
   public authorId!: string;
   public isRepost!: boolean;
   public originAuthorId!: string;
@@ -22,12 +20,13 @@ export class BlogPostEntity<T extends PostType>
   public publicDate!: Date;
   public likesCount!: number;
   public commentsCount!: number;
+  public extraProperty!: PostExtraProperty[keyof PostExtraProperty];
 
-  constructor(post?: Post<T>) {
+  constructor(post?: Post) {
     super();
     this.populate(post);
   }
-  public populate(post?: Post<T>): void {
+  public populate(post?: Post): void {
     if (!post) {
       return;
     }
@@ -44,6 +43,7 @@ export class BlogPostEntity<T extends PostType>
       publicDate,
       likesCount,
       commentsCount,
+      extraProperty,
     } = post;
 
     this.id = id ?? '';
@@ -58,9 +58,10 @@ export class BlogPostEntity<T extends PostType>
     this.publicDate = publicDate;
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
+    this.extraProperty = extraProperty;
   }
 
-  toPOJO(): Post<T> {
+  toPOJO(): Post {
     const {
       id,
       postType,
@@ -74,6 +75,7 @@ export class BlogPostEntity<T extends PostType>
       publicDate,
       likesCount,
       commentsCount,
+      extraProperty,
     } = this;
 
     return {
@@ -89,6 +91,7 @@ export class BlogPostEntity<T extends PostType>
       publicDate,
       likesCount,
       commentsCount,
+      extraProperty,
     };
   }
 }
