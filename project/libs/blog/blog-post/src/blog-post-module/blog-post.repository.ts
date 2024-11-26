@@ -10,17 +10,10 @@ export class BlogPostRepository extends BaseMemoryRepository<BlogPostEntity> {
   }
 
   public async findByTag(tag: string): Promise<BlogPostEntity | null> {
-    const entities = Array.from(this.entities.values());
-    const post = entities.find(
-      (entity) =>
-        entity.tags !== undefined &&
-        entity.tags.some((tags) => tags.title === tag)
+    const post = [...this.entities.values()].find((entity) =>
+      entity.tags?.some((someTag) => someTag.title === tag)
     );
 
-    if (!post) {
-      return null;
-    }
-
-    return this.entityFactory.create(post);
+    return post ? this.entityFactory.create(post) : null;
   }
 }
