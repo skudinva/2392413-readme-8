@@ -14,7 +14,13 @@
     "class-transformer": "^0.5.1",
     "dayjs": "^1.11.13",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "@nestjs/swagger": "7.3.1",
+    "@nestjs/config": "3.2.1",
+    "@nestjs/mongoose": "10.0.4",
+    "class-validator": "0.14.1",
+    "joi": "17.12.3",
+    "mongoose": "8.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
