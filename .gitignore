@@ -9,3 +9,8 @@
 .DS_Store
 coverage
 *.log
+
+.nx/cache
+
+# Environments
+*.env
