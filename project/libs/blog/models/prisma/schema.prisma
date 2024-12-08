@@ -12,3 +12,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum PostType {
+  Video @map("video")
+  Text  @map("text")
+  Quote @map("quote")
+  Photo @map("photo")
+  Link  @map("link")
+}
+
+enum PostState {
+  Published @map("published")
+  Draft     @map("draft")
+}
+
+model Tag {
+  id    String @id @default(uuid()) @map("id")
+  title String @unique
+  posts Post[]
+
+  @@map("tags")
+}
+
+model PostExtraProperty {
+  id       String  @id @default(uuid())
+  postId   String  @unique @map("post_id")
+  url      String?
+  describe String?
+  photo    String?
+  text     String?
+  announce String?
+  name     String?
+  post     Post    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("post_extra_property")
+}
+
+model Post {
+  id                String             @id @default(uuid())
+  postType          PostType           @map("post_type")
+  authorId          String             @map("author_id")
+  isRepost          Boolean            @map("is_repost")
+  originAuthorId    String             @map("origin_author_id")
+  originPostId      String             @map("origin_post_id")
+  tags              Tag[]
+  state             PostState
+  createdAt         DateTime           @default(now()) @map("created_at")
+  publicDate        DateTime           @map("public_date")
+  likesCount        Int                @default(0) @map("likes_count")
+  commentsCount     Int                @default(0) @map("comments_count")
+  PostExtraProperty PostExtraProperty?
+
+  @@map("posts")
+}

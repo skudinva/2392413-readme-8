@@ -12,7 +12,7 @@ export interface Post {
   originPostId?: string;
   tags?: Tag[];
   state: PostState;
-  createDate: Date;
+  createdAt: Date;
   publicDate: Date;
   likesCount: number;
   commentsCount: number;

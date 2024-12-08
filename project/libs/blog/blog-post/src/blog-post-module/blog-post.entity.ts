@@ -16,7 +16,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public originPostId!: string;
   public tags!: Tag[];
   public state!: PostState;
-  public createDate!: Date;
+  public createdAt!: Date;
   public publicDate!: Date;
   public likesCount!: number;
   public commentsCount!: number;
@@ -39,7 +39,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       originPostId,
       tags,
       state,
-      createDate,
+      createdAt,
       publicDate,
       likesCount,
       commentsCount,
@@ -54,7 +54,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.originPostId = originPostId ?? '';
     this.tags = tags ?? [];
     this.state = state;
-    this.createDate = createDate;
+    this.createdAt = createdAt;
     this.publicDate = publicDate;
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
@@ -71,7 +71,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       originPostId: this.originPostId,
       tags: this.tags,
       state: this.state,
-      createDate: this.createDate,
+      createdAt: this.createdAt,
       publicDate: this.publicDate,
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,

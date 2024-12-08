@@ -16,7 +16,7 @@ export class BlogPostService {
       authorId: dto.authorId,
       isRepost: dto.isRepost,
       state: PostState.Published,
-      createDate: dayjs().toDate(),
+      createdAt: dayjs().toDate(),
       publicDate: dayjs().toDate(),
       likesCount: 0,
       commentsCount: 0,
