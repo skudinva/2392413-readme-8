@@ -20,7 +20,8 @@
     "@nestjs/mongoose": "10.0.4",
     "class-validator": "0.14.1",
     "joi": "17.12.3",
-    "mongoose": "8.2.4"
+    "mongoose": "8.2.4",
+    "@prisma/client": "5.12.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -51,6 +52,7 @@
     "tslib": "^2.3.0",
     "typescript": "~5.5.2",
     "typescript-eslint": "^8.0.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "prisma": "5.12.1"
   }
 }
