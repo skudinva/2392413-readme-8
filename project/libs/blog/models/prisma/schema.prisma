@@ -54,17 +54,17 @@ model Post {
   postType          PostType           @map("post_type")
   authorId          String             @map("author_id")
   isRepost          Boolean            @map("is_repost")
-  originAuthorId    String             @map("origin_author_id")
-  originPostId      String             @map("origin_post_id")
+  originAuthorId    String?            @map("origin_author_id")
+  originPostId      String?            @map("origin_post_id")
   tags              Tag[]
   state             PostState
   createdAt         DateTime           @default(now()) @map("created_at")
   publicDate        DateTime           @map("public_date")
   likesCount        Int                @default(0) @map("likes_count")
   commentsCount     Int                @default(0) @map("comments_count")
-  PostExtraProperty PostExtraProperty?
-  Comment           Comment[]
-  Like              Like[]
+  postExtraProperty PostExtraProperty?
+  comments          Comment[]
+  likes             Like[]
 
   @@map("posts")
 }
