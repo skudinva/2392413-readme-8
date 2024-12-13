@@ -1,7 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Like } from '@project/shared/core';
-import { CreateLikeDto } from '../dto/create-like.dto';
-import { DeleteLikeDto } from '../dto/delete-like.dto';
 import { BlogLikeEntity } from './blog-like.entity';
 import { BlogLikeRepository } from './blog-like.repository';
 
@@ -9,31 +11,26 @@ import { BlogLikeRepository } from './blog-like.repository';
 export class BlogLikeService {
   constructor(private readonly blogLikeRepository: BlogLikeRepository) {}
 
-  public async create(dto: CreateLikeDto): Promise<BlogLikeEntity> {
-    const like: Like = {
-      userId: dto.userId,
-      postId: dto.postId,
-    };
-
-    const likeEntity = new BlogLikeEntity(like);
-    this.blogLikeRepository.save(likeEntity);
-    return likeEntity;
-  }
-
-  public async delete(dto: DeleteLikeDto): Promise<BlogLikeEntity> {
-    const { userId, postId } = dto;
-    const existLike = await this.blogLikeRepository.findByPostId(
-      userId,
-      postId
-    );
-    if (!existLike) {
-      throw new NotFoundException(
-        `Like with postId ${postId} not found for user.`
+  public async like(like: Like): Promise<void> {
+    const isLikeExists = await this.blogLikeRepository.isLikeExists(like);
+    if (isLikeExists) {
+      throw new ConflictException(
+        `Like already exist with postId ${like.postId} `
       );
     }
 
-    const deleteLike = new BlogLikeEntity({ ...existLike, ...dto });
-    this.blogLikeRepository.deleteById(deleteLike.id);
-    return deleteLike;
+    const newLike = new BlogLikeEntity(like);
+    await this.blogLikeRepository.save(newLike);
+  }
+
+  public async unlike(like: Like): Promise<void> {
+    const isLikeExists = await this.blogLikeRepository.isLikeExists(like);
+    if (!isLikeExists) {
+      throw new NotFoundException(
+        `Like with postId ${like.postId} not found for user.`
+      );
+    }
+
+    await this.blogLikeRepository.deleteByIds(like);
   }
 }
