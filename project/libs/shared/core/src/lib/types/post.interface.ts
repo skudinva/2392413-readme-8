@@ -1,4 +1,3 @@
-import { Comment } from './comment.interface';
 import { PostExtraProperty } from './post-extra-property.interface';
 import { PostState } from './post-state.enum';
 import { PostType } from './post-type.enum';
@@ -18,5 +17,4 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   extraProperty: PostExtraProperty[keyof PostExtraProperty];
-  comments: Comment[];
 }

@@ -1,4 +1,5 @@
 import {
+  Comment,
   Entity,
   Post,
   PostExtraProperty,
@@ -21,6 +22,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public likesCount!: number;
   public commentsCount!: number;
   public extraProperty!: PostExtraProperty[keyof PostExtraProperty];
+  public comments!: Comment[];
 
   constructor(post?: Post) {
     super();
