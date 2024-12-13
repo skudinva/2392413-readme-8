@@ -12,16 +12,14 @@ export class BlogLikeEntity extends Entity implements StorableEntity<Like> {
     if (!like) {
       return;
     }
-    const { userId, postId, id } = like;
+    const { userId, postId } = like;
 
-    this.id = id ?? '';
     this.userId = userId;
     this.postId = postId;
   }
 
   toPOJO(): Like {
     return {
-      id: this.id,
       userId: this.userId,
       postId: this.postId,
     };
