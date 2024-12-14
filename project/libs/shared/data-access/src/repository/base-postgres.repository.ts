@@ -20,7 +20,7 @@ export abstract class BasePostgresRepository<
     return this.entityFactory.create(document as ReturnType<T['toPOJO']>);
   }
 
-  public async findById(id: T['id']): Promise<T> {
+  public async findById(id: T['id']): Promise<T | null> {
     throw new Error('Not implemented');
   }
 

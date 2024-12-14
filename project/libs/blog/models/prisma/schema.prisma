@@ -15,16 +15,16 @@ datasource db {
 }
 
 enum PostType {
-  Video @map("video")
-  Text  @map("text")
-  Quote @map("quote")
-  Photo @map("photo")
-  Link  @map("link")
+  Video
+  Text
+  Quote
+  Photo
+  Link
 }
 
 enum PostState {
-  Published @map("published")
-  Draft     @map("draft")
+  Published
+  Draft
 }
 
 model Tag {

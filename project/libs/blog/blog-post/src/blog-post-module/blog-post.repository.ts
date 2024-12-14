@@ -46,6 +46,7 @@ export class BlogPostRepository extends BasePostgresRepository<
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
+
     return this.createEntityFromDocument(post);
   }
 }
