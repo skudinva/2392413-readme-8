@@ -1,15 +1,59 @@
 import { PostState, PostType } from '@prisma/client';
-import { PostExtraProperty, Tag } from '@project/shared/core';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsIn,
+  IsISO8601,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  Length,
+  ValidateNested,
+} from 'class-validator';
+import { PostExtraPropertyDto } from './post-extra-property.dto';
 
 export class UpdatePostDto {
-  id!: string;
-  postType!: PostType;
-  authorId!: string;
-  isRepost!: boolean;
+  @IsIn(Object.values(PostType))
+  @IsOptional()
+  postType?: PostType;
+
+  @IsString()
+  @IsMongoId()
+  @IsOptional()
+  authorId?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isRepost?: boolean;
+
+  @IsString()
+  @IsOptional()
+  @IsMongoId()
   originAuthorId?: string;
+
+  @IsString()
+  @IsOptional()
   originPostId?: string;
-  tags?: Tag[];
-  state!: PostState;
-  publicDate!: Date;
-  extraProperty!: PostExtraProperty;
+
+  @IsOptional()
+  @IsString({ each: true })
+  @ArrayMaxSize(8)
+  @IsArray()
+  @Length(3, 10, { each: true })
+  tags?: string[];
+
+  @IsIn(Object.values(PostState))
+  @IsOptional()
+  state?: PostState;
+
+  @IsISO8601()
+  @IsOptional()
+  publicDate?: Date;
+
+  @ValidateNested()
+  @IsOptional()
+  @Type(() => PostExtraPropertyDto)
+  extraProperty?: PostExtraPropertyDto;
 }
