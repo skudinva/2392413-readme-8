@@ -1,11 +1,11 @@
 import { PostState, PostType } from '@prisma/client';
+import { BlogCommentEntity, BlogCommentFactory } from '@project/blog-comment';
+import { BlogTagEntity, BlogTagFactory } from '@project/blog-tag';
 import {
-  Comment,
   Entity,
   Post,
   PostExtraProperty,
   StorableEntity,
-  Tag,
 } from '@project/shared/core';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
@@ -14,14 +14,14 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public isRepost!: boolean;
   public originAuthorId?: string;
   public originPostId?: string;
-  public tags!: Tag[];
+  public tags!: BlogTagEntity[];
   public state!: PostState;
   public createdAt!: Date;
   public publicDate!: Date;
   public likesCount!: number;
   public commentsCount!: number;
   public extraProperty?: PostExtraProperty;
-  public comments!: Comment[];
+  public comments!: BlogCommentEntity[];
 
   constructor(post?: Post) {
     super();
@@ -45,6 +45,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       likesCount,
       commentsCount,
       extraProperty,
+      comments,
     } = post;
 
     this.id = id ?? '';
@@ -53,13 +54,26 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.isRepost = isRepost;
     this.originAuthorId = originAuthorId ?? '';
     this.originPostId = originPostId ?? '';
-    this.tags = tags ?? [];
+    this.tags = [];
     this.state = state;
     this.createdAt = createdAt;
     this.publicDate = publicDate;
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
     this.extraProperty = extraProperty ?? undefined;
+    this.comments = [];
+
+    const blogCommentFactory = new BlogCommentFactory();
+    for (const comment of comments) {
+      const blogCommentEntity = blogCommentFactory.create(comment);
+      this.comments.push(blogCommentEntity);
+    }
+
+    const blogTagFactory = new BlogTagFactory();
+    for (const tag of tags) {
+      const blogTagEntity = blogTagFactory.create(tag);
+      this.tags.push(blogTagEntity);
+    }
   }
 
   toPOJO(): Post {
@@ -70,14 +84,14 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       isRepost: this.isRepost,
       originAuthorId: this.originAuthorId ?? '',
       originPostId: this.originPostId ?? '',
-      tags: this.tags,
       state: this.state,
       createdAt: this.createdAt,
       publicDate: this.publicDate,
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,
       extraProperty: this.extraProperty ?? null,
-      comments: this.comments,
+      tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
+      comments: this.comments.map((commentEntity) => commentEntity.toPOJO()),
     };
   }
 }

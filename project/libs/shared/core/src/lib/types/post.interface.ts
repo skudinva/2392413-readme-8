@@ -10,7 +10,7 @@ export interface Post {
   isRepost: boolean;
   originAuthorId?: string | null;
   originPostId?: string | null;
-  tags?: Tag[];
+  tags: Tag[];
   state: PostState;
   createdAt: Date;
   publicDate: Date;
