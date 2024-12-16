@@ -27,7 +27,7 @@ function getPosts() {
           },
         ],
       },
-      postExtraProperty: {
+      extraProperty: {
         name: 'Тестовый name',
         announce: 'Тестовый announce',
         text: 'Тестовый text',
@@ -53,17 +53,18 @@ function getPosts() {
           },
         ],
       },
-      postExtraProperty: {
+      extraProperty: {
         photo:
           'https://assets.htmlacademy.ru/previews/797/20231226_7720a938-150.png',
       },
       comments: [
         {
-          text: 'Это действительно отличная книга!',
+          message: 'Это действительно отличная книга!',
           userId: FIRST_USER_ID,
         },
         {
-          text: 'Надо будет обязательно перечитать. Слишком много информации.',
+          message:
+            'Надо будет обязательно перечитать. Слишком много информации.',
           userId: SECOND_USER_ID,
         },
       ],
@@ -95,8 +96,8 @@ async function seedDb(prismaClient: PrismaClient) {
               create: post.comments,
             }
           : undefined,
-        postExtraProperty: {
-          create: post.postExtraProperty,
+        extraProperty: {
+          create: post.extraProperty,
         },
       },
     });
