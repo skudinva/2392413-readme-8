@@ -1,9 +1,9 @@
+import { PostState, PostType } from '@prisma/client';
 import {
+  Comment,
   Entity,
   Post,
   PostExtraProperty,
-  PostState,
-  PostType,
   StorableEntity,
   Tag,
 } from '@project/shared/core';
@@ -12,15 +12,16 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public postType!: PostType;
   public authorId!: string;
   public isRepost!: boolean;
-  public originAuthorId!: string;
-  public originPostId!: string;
+  public originAuthorId?: string;
+  public originPostId?: string;
   public tags!: Tag[];
   public state!: PostState;
-  public createDate!: Date;
+  public createdAt!: Date;
   public publicDate!: Date;
   public likesCount!: number;
   public commentsCount!: number;
-  public extraProperty!: PostExtraProperty[keyof PostExtraProperty];
+  public extraProperty?: PostExtraProperty;
+  public comments!: Comment[];
 
   constructor(post?: Post) {
     super();
@@ -39,7 +40,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       originPostId,
       tags,
       state,
-      createDate,
+      createdAt,
       publicDate,
       likesCount,
       commentsCount,
@@ -54,11 +55,11 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.originPostId = originPostId ?? '';
     this.tags = tags ?? [];
     this.state = state;
-    this.createDate = createDate;
+    this.createdAt = createdAt;
     this.publicDate = publicDate;
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
-    this.extraProperty = extraProperty;
+    this.extraProperty = extraProperty ?? undefined;
   }
 
   toPOJO(): Post {
@@ -67,15 +68,15 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       postType: this.postType,
       authorId: this.authorId,
       isRepost: this.isRepost,
-      originAuthorId: this.originAuthorId,
-      originPostId: this.originPostId,
+      originAuthorId: this.originAuthorId ?? '',
+      originPostId: this.originPostId ?? '',
       tags: this.tags,
       state: this.state,
-      createDate: this.createDate,
+      createdAt: this.createdAt,
       publicDate: this.publicDate,
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,
-      extraProperty: this.extraProperty,
+      extraProperty: this.extraProperty ?? null,
     };
   }
 }

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
+import { BlogLikeFactory } from './blog-like.factory';
+import { BlogLikeRepository } from './blog-like.repository';
+import { BlogLikeService } from './blog-like.service';
 
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  providers: [BlogLikeService, BlogLikeFactory, BlogLikeRepository],
+  exports: [BlogLikeService],
 })
 export class BlogLikeModule {}

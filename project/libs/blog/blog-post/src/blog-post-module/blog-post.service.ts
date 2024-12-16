@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Post, PostState } from '@project/shared/core';
+import { PostState } from '@prisma/client';
+import { Post } from '@project/shared/core';
 import dayjs from 'dayjs';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
@@ -16,7 +17,7 @@ export class BlogPostService {
       authorId: dto.authorId,
       isRepost: dto.isRepost,
       state: PostState.Published,
-      createDate: dayjs().toDate(),
+      createdAt: dayjs().toDate(),
       publicDate: dayjs().toDate(),
       likesCount: 0,
       commentsCount: 0,

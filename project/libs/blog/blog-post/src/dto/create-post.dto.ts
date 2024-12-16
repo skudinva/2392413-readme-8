@@ -1,18 +1,14 @@
-import {
-  PostExtraProperty,
-  PostState,
-  PostType,
-  Tag,
-} from '@project/shared/core';
+import { PostState, PostType } from '@prisma/client';
+import { PostExtraProperty, Tag } from '@project/shared/core';
 
 export class CreatePostDto {
   postType!: PostType;
   authorId!: string;
   isRepost!: boolean;
-  originAuthorId?: string | undefined;
-  originPostId?: string | undefined;
-  tags?: Tag[] | undefined;
+  originAuthorId?: string;
+  originPostId?: string;
+  tags?: Tag[];
   state!: PostState;
   publicDate!: Date;
-  extraProperty!: PostExtraProperty[keyof PostExtraProperty];
+  extraProperty!: PostExtraProperty;
 }

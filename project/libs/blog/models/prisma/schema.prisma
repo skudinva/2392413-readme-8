@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostType {
+  Video
+  Text
+  Quote
+  Photo
+  Link
+}
+
+enum PostState {
+  Published
+  Draft
+}
+
+model Tag {
+  id    String @id @default(uuid()) @map("id")
+  title String @unique
+  posts Post[]
+
+  @@map("tags")
+}
+
+model PostExtraProperty {
+  id       String  @id @default(uuid())
+  postId   String  @unique @map("post_id")
+  url      String?
+  describe String?
+  photo    String?
+  text     String?
+  announce String?
+  name     String?
+  post     Post    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("post_extra_property")
+}
+
+model Post {
+  id             String             @id @default(uuid())
+  postType       PostType           @map("post_type")
+  authorId       String             @map("author_id")
+  isRepost       Boolean            @map("is_repost")
+  originAuthorId String?            @map("origin_author_id")
+  originPostId   String?            @map("origin_post_id")
+  tags           Tag[]
+  state          PostState
+  createdAt      DateTime           @default(now()) @map("created_at")
+  publicDate     DateTime           @map("public_date")
+  likesCount     Int                @default(0) @map("likes_count")
+  commentsCount  Int                @default(0) @map("comments_count")
+  extraProperty  PostExtraProperty?
+  comments       Comment[]
+  likes          Like[]
+
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(uuid()) @map("id")
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("comments")
+}
+
+model Like {
+  userId String @map("user_id")
+  postId String @map("post_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([userId, postId])
+  @@map("likes")
+}
