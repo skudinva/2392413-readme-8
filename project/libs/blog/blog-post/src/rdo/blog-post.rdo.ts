@@ -1,9 +1,12 @@
 import { PostState, PostType } from '@prisma/client';
 import { TagRdo } from '@project/blog-tag';
-import { PostExtraProperty } from '@project/shared/core';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { PostExtraPropertyRdo } from './post-extra-property.rdo';
 
 export class BlogPostRdo {
+  @Expose()
+  public id!: string;
+
   @Expose()
   postType!: PostType;
 
@@ -20,16 +23,17 @@ export class BlogPostRdo {
   originPostId?: string;
 
   @Expose()
+  @Type(() => TagRdo)
   tags!: TagRdo[];
 
   @Expose()
   state!: PostState;
 
   @Expose()
-  createdAt!: Date;
+  createdAt!: string;
 
   @Expose()
-  publicDate!: Date;
+  publicDate!: string;
 
   @Expose()
   likesCount!: number;
@@ -38,7 +42,8 @@ export class BlogPostRdo {
   commentsCount!: number;
 
   @Expose()
-  extraProperty?: PostExtraProperty;
+  @Type(() => PostExtraPropertyRdo)
+  extraProperty?: PostExtraPropertyRdo;
 
   @Expose()
   comments!: Comment[];

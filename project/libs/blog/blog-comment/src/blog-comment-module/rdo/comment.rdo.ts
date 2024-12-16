@@ -11,5 +11,5 @@ export class CommentRdo {
   public userId!: string;
 
   @Expose()
-  public createdAt!: Date;
+  public createdAt!: string;
 }
