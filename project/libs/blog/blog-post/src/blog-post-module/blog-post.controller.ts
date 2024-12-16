@@ -1,10 +1,10 @@
 import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { fillDto } from '@project/helpers';
-import { CreatePostDto } from '../dto/create-post.dto';
-import { BlogPostRdo } from '../rdo/blog-post.rdo';
 import { BlogPostResponse } from './blog-post.constant';
 import { BlogPostService } from './blog-post.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { BlogPostRdo } from './rdo/blog-post.rdo';
 
 @Controller('blog-post-controller')
 export class BlogPostController {

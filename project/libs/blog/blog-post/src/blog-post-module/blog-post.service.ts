@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostState } from '@prisma/client';
 import { Post } from '@project/shared/core';
 import dayjs from 'dayjs';
-import { CreatePostDto } from '../dto/create-post.dto';
-import { UpdatePostDto } from '../dto/update-post.dto';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostRepository } from './blog-post.repository';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class BlogPostService {
