@@ -22,6 +22,7 @@ export class BlogPostRepository extends BasePostgresRepository<
         tags: {
           connect: pojoPost.tags?.map(({ id }) => ({ id })),
         },
+        comments: undefined,
         extraProperty: pojoPost.extraProperty
           ? { create: { ...pojoPost.extraProperty } }
           : undefined,

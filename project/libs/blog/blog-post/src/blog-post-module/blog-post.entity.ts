@@ -77,6 +77,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,
       extraProperty: this.extraProperty ?? null,
+      comments: this.comments,
     };
   }
 }

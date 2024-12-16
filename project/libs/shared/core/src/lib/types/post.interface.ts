@@ -1,4 +1,5 @@
 import { PostState, PostType } from '@prisma/client';
+import { Comment } from './comment.interface';
 import { PostExtraProperty } from './post-extra-property.interface';
 import { Tag } from './tag.interface';
 
@@ -16,4 +17,5 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   extraProperty: PostExtraProperty | null;
+  comments: Comment[];
 }

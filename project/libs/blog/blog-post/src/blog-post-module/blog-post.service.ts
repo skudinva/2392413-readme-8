@@ -22,6 +22,7 @@ export class BlogPostService {
       likesCount: 0,
       commentsCount: 0,
       extraProperty: dto.extraProperty,
+      comments: [],
     };
 
     const postEntity = new BlogPostEntity(post);
