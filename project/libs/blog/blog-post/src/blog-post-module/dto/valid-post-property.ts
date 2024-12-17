@@ -11,6 +11,33 @@ interface DependentsPostProperties {
   extraProperty: PostExtraProperty;
 }
 
+function isNotEmpties(
+  extraProperty: PostExtraProperty,
+  keys: (keyof PostExtraProperty)[]
+): boolean {
+  return keys.every((key) => {
+    const value = extraProperty[key];
+    return value !== undefined && value !== null && value.length > 0;
+  });
+}
+
+function validateDependentsPostProperties(object: DependentsPostProperties) {
+  const { postType, extraProperty } = object;
+
+  if (postType === PostType.Link) {
+    return isNotEmpties(extraProperty, ['url', 'describe']);
+  } else if (postType === PostType.Photo) {
+    return isNotEmpties(extraProperty, ['photo']);
+  } else if (postType === PostType.Quote) {
+    return isNotEmpties(extraProperty, ['text']);
+  } else if (postType === PostType.Text) {
+    return isNotEmpties(extraProperty, ['name', 'announce', 'text']);
+  } else if (postType === PostType.Video) {
+    return isNotEmpties(extraProperty, ['name', 'url']);
+  }
+  return false;
+}
+
 export function IsValidPostCombination(validationOptions?: ValidationOptions) {
   // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   return function (object: Object, propertyName: string) {
@@ -33,31 +60,7 @@ export function IsValidPostCombination(validationOptions?: ValidationOptions) {
             return false;
           }
 
-          const { postType, extraProperty } = object;
-
-          if (postType === PostType.Link) {
-            return (
-              (extraProperty.url ?? '').length > 0 &&
-              (extraProperty.describe ?? '').length > 0
-            );
-          } else if (postType === PostType.Photo) {
-            return (extraProperty.photo ?? '').length > 0;
-          } else if (postType === PostType.Quote) {
-            return (extraProperty.text ?? '').length > 0;
-          } else if (postType === PostType.Text) {
-            return (
-              (extraProperty.name ?? '').length > 0 &&
-              (extraProperty.announce ?? '').length > 0 &&
-              (extraProperty.text ?? '').length > 0
-            );
-          } else if (postType === PostType.Video) {
-            return (
-              (extraProperty.name ?? '').length > 0 &&
-              (extraProperty.url ?? '').length > 0
-            );
-          }
-
-          return false;
+          return validateDependentsPostProperties(object);
         },
       },
     });
