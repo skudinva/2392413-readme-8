@@ -10,7 +10,10 @@ export class BlogTagRepository extends BasePostgresRepository<
   BlogTagEntity,
   Tag
 > {
-  constructor(tagFactory: BlogTagFactory, client: PrismaClientService) {
+  constructor(
+    private readonly tagFactory: BlogTagFactory,
+    client: PrismaClientService
+  ) {
     super(tagFactory, client);
   }
 
@@ -38,15 +41,21 @@ export class BlogTagRepository extends BasePostgresRepository<
     return this.createEntityFromDocument(tag);
   }
 
-  public async findOrCreateByTitle(
-    title: string
-  ): Promise<BlogTagEntity | null> {
-    const tag = this.findByTitle(title);
-    if (!tag) {
-      const newTag = new BlogTagEntity({ title });
-      this.save(newTag);
-      return newTag;
+  public async findOrCreateByTitle(title: string): Promise<BlogTagEntity> {
+    const tag = await this.findByTitle(title);
+    if (tag) {
+      return tag;
     }
-    return tag;
+
+    const newTag = this.tagFactory.create({ title });
+    this.save(newTag);
+    return newTag;
+  }
+  public async findOrCreateByTitles(
+    titles: string[]
+  ): Promise<BlogTagEntity[]> {
+    return await Promise.all(
+      titles.map(async (title) => await this.findOrCreateByTitle(title))
+    );
   }
 }
