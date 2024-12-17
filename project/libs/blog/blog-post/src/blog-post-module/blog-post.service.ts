@@ -45,4 +45,16 @@ export class BlogPostService {
     await this.blogPostRepository.update(existPost);
     return existPost;
   }
+
+  public async deletePost(id: string): Promise<void> {
+    try {
+      await this.blogPostRepository.deleteById(id);
+    } catch {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+  }
+
+  public async getPost(id: string): Promise<BlogPostEntity> {
+    return this.blogPostRepository.findById(id);
+  }
 }
