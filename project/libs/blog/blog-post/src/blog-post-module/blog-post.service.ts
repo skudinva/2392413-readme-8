@@ -1,44 +1,48 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostState } from '@prisma/client';
-import { Post } from '@project/shared/core';
-import dayjs from 'dayjs';
+import { BlogTagService } from '@project/blog-tag';
 import { BlogPostEntity } from './blog-post.entity';
+import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class BlogPostService {
-  constructor(private readonly blogPostRepository: BlogPostRepository) {}
+  constructor(
+    private readonly blogPostRepository: BlogPostRepository,
+    private readonly blogTagService: BlogTagService
+  ) {}
 
-  public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
-    const post: Post = {
-      postType: dto.postType,
-      authorId: dto.authorId,
-      isRepost: dto.isRepost,
-      state: PostState.Published,
-      createdAt: dayjs().toDate(),
-      publicDate: dayjs().toDate(),
-      likesCount: 0,
-      commentsCount: 0,
-      extraProperty: dto.extraProperty,
-      comments: [],
-    };
+  public async createPost(dto: CreatePostDto): Promise<BlogPostEntity> {
+    const tags = dto.tags
+      ? await this.blogTagService.findOrCreate(dto.tags)
+      : [];
 
-    const postEntity = new BlogPostEntity(post);
-    this.blogPostRepository.save(postEntity);
-    return postEntity;
+    const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags);
+    await this.blogPostRepository.save(newPost);
+
+    return newPost;
   }
 
-  public async update(dto: UpdatePostDto): Promise<BlogPostEntity> {
-    const { id } = dto;
+  public async updatePost(
+    id: string,
+    dto: UpdatePostDto
+  ): Promise<BlogPostEntity> {
     const existPost = await this.blogPostRepository.findById(id);
     if (!existPost) {
-      throw new NotFoundException(`Post with ids ${id} not found.`);
+      throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
-    const updatePost = new BlogPostEntity({ ...existPost, ...dto });
-    this.blogPostRepository.update(updatePost);
-    return updatePost;
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined && key !== 'tags' && existPost[key] !== value) {
+        existPost[key] = value;
+      }
+      if (key === 'tags' && value) {
+        existPost.tags = await this.blogTagService.findOrCreate(dto.tags);
+      }
+    }
+
+    await this.blogPostRepository.update(existPost);
+    return existPost;
   }
 }
