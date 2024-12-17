@@ -1,15 +1,12 @@
 import { PostType } from '@prisma/client';
-import { PostExtraProperty } from '@project/shared/core';
+import { Post, PostExtraProperty } from '@project/shared/core';
 import {
   registerDecorator,
   ValidationArguments,
   ValidationOptions,
 } from 'class-validator';
 
-interface DependentsPostProperties {
-  postType: PostType;
-  extraProperty: PostExtraProperty;
-}
+type DependentsPostProperties = Pick<Post, 'postType' | 'extraProperty'>;
 
 function isNotEmpties(
   extraProperty: PostExtraProperty,
@@ -23,6 +20,9 @@ function isNotEmpties(
 
 function validateDependentsPostProperties(object: DependentsPostProperties) {
   const { postType, extraProperty } = object;
+  if (extraProperty === null) {
+    return false;
+  }
 
   if (postType === PostType.Link) {
     return isNotEmpties(extraProperty, ['url', 'describe']);
