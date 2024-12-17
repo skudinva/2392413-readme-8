@@ -13,6 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { PostExtraPropertyDto } from './post-extra-property.dto';
+import { IsValidPostCombination } from './valid-post-property';
 
 export class UpdatePostDto {
   @IsIn(Object.values(PostType))
@@ -55,5 +56,8 @@ export class UpdatePostDto {
   @ValidateNested()
   @IsOptional()
   @Type(() => PostExtraPropertyDto)
+  @IsValidPostCombination({
+    message: 'Invalid combination of PostType',
+  })
   extraProperty?: PostExtraPropertyDto;
 }
