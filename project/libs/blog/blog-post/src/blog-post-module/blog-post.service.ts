@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogTagService } from '@project/blog-tag';
+import { PaginationResult } from '@project/shared/core';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
+import { BlogPostQuery } from './blog-post.query';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -56,5 +58,11 @@ export class BlogPostService {
 
   public async getPost(id: string): Promise<BlogPostEntity> {
     return this.blogPostRepository.findById(id);
+  }
+
+  public async getPosts(
+    query?: BlogPostQuery
+  ): Promise<PaginationResult<BlogPostEntity | null>> {
+    return this.blogPostRepository.find(query);
   }
 }
