@@ -4,6 +4,8 @@ export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { SortDirection } from './lib/interfaces/sort-direction.interface';
 export { SortType } from './lib/interfaces/sort-type.interface';
 export { StorableEntity } from './lib/interfaces/storable-entity.interface';
+export { TokenPayload } from './lib/interfaces/token-payload.interface';
+export { Token } from './lib/interfaces/token.interface';
 export { AuthUser } from './lib/types/auth-user.interface';
 export { Comment } from './lib/types/comment.interface';
 export { Like } from './lib/types/like.interface';
