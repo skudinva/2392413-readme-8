@@ -1,4 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BlogCommentEntity,
+  BlogCommentFactory,
+  BlogCommentRepository,
+  CreateCommentDto,
+} from '@project/blog-comment';
 import { BlogTagService } from '@project/blog-tag';
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostEntity } from './blog-post.entity';
@@ -12,7 +18,9 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class BlogPostService {
   constructor(
     private readonly blogPostRepository: BlogPostRepository,
-    private readonly blogTagService: BlogTagService
+    private readonly blogTagService: BlogTagService,
+    private readonly blogCommentRepository: BlogCommentRepository,
+    private readonly blogCommentFactory: BlogCommentFactory
   ) {}
 
   public async createPost(dto: CreatePostDto): Promise<BlogPostEntity> {
@@ -64,5 +72,19 @@ export class BlogPostService {
     query?: BlogPostQuery
   ): Promise<PaginationResult<BlogPostEntity | null>> {
     return this.blogPostRepository.find(query);
+  }
+
+  public async addComment(
+    postId: string,
+    dto: CreateCommentDto
+  ): Promise<BlogCommentEntity> {
+    const existsPost = await this.getPost(postId);
+    const newComment = this.blogCommentFactory.createFromDto(
+      dto,
+      existsPost.id
+    );
+    await this.blogCommentRepository.save(newComment);
+
+    return newComment;
   }
 }
