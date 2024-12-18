@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MongoIdValidationPipe } from '@project/pipes';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { LoggedUserRdo } from '../rdo/logged-user.rdo';
@@ -57,7 +58,7 @@ export class AuthenticationController {
   }
 
   @Get('/demo/:id')
-  public async demoPipe(@Param('id') id: number) {
+  public async demoPipe(@Param('id', MongoIdValidationPipe) id: number) {
     console.log(typeof id);
   }
 }
