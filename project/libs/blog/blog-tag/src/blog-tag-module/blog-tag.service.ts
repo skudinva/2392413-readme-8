@@ -14,14 +14,12 @@ export class BlogTagService {
     return this.blogTagRepository.findByTitle(title);
   }
 
+  public async findOrCreate(titles: string[]): Promise<BlogTagEntity[]> {
+    return await this.blogTagRepository.findOrCreateByTitles(titles);
+  }
+
   public async create(dto: CreateTagDto): Promise<BlogTagEntity> {
     const { title } = dto;
-    const blogTagEntity = await this.blogTagRepository.findByTitle(title);
-    if (blogTagEntity) {
-      return blogTagEntity;
-    }
-    const newTag = new BlogTagEntity({ title });
-    this.blogTagRepository.save(newTag);
-    return newTag;
+    return await this.blogTagRepository.findOrCreateByTitle(title);
   }
 }
