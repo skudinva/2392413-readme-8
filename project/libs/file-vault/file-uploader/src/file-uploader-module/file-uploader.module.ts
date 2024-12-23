@@ -18,6 +18,10 @@ const SERVE_ROOT = '/static';
           {
             rootPath,
             serveRoot: SERVE_ROOT,
+            serveStaticOptions: {
+              fallthrough: true,
+              etag: true,
+            },
           },
         ];
       },
