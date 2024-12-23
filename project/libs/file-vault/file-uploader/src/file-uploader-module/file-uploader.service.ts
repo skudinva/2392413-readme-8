@@ -3,7 +3,9 @@ import { ConfigType } from '@nestjs/config';
 import { FileVaultConfig } from '@project/file-vault-config';
 import dayjs from 'dayjs';
 import { ensureDir } from 'fs-extra';
+import { extension } from 'mime-types';
 import 'multer';
+import { randomUUID } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -28,8 +30,11 @@ export class FileUploaderService {
   public async saveFile(file: Express.Multer.File): Promise<string> {
     try {
       const uploadDirectoryPath = this.getUploadDirectoryPath();
-      const destinationFile = this.getDestinationFilePath(file.originalname);
-
+      const filename = randomUUID();
+      const fileExtension = extension(file.mimetype);
+      const destinationFile = this.getDestinationFilePath(
+        `${filename}.${fileExtension}`
+      );
       await ensureDir(uploadDirectoryPath);
       await writeFile(destinationFile, file.buffer);
 
