@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FileUploaderController } from './file-uploader.controller';
+import { FileUploaderFactory } from './file-uploader.factory';
+import { FileUploaderRepository } from './file-uploader.repository';
 import { FileUploaderService } from './file-uploader.service';
+import { FileModel, FileSchema } from './file.model';
 
 const SERVE_ROOT = '/static';
 
@@ -26,8 +30,9 @@ const SERVE_ROOT = '/static';
         ];
       },
     }),
+    MongooseModule.forFeature([{ name: FileModel.name, schema: FileSchema }]),
   ],
-  providers: [FileUploaderService],
+  providers: [FileUploaderService, FileUploaderRepository, FileUploaderFactory],
   controllers: [FileUploaderController],
 })
 export class FileUploaderModule {}
