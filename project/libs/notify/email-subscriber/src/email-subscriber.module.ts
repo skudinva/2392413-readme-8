@@ -9,6 +9,7 @@ import {
 } from './email-subscriber.model';
 import { EmailSubscriberRepository } from './email-subscriber.repository';
 import { EmailSubscriberService } from './email-subscriber.service';
+import { MailModule } from './mail-module/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EmailSubscriberService } from './email-subscriber.service';
       RabbitMQModule,
       getRabbitMQOptions('application.rabbit')
     ),
+    MailModule,
   ],
   providers: [
     EmailSubscriberService,
