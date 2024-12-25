@@ -13,5 +13,6 @@ export { Like } from './lib/types/like.interface';
 export { PostExtraProperty } from './lib/types/post-extra-property.interface';
 export { Post } from './lib/types/post.interface';
 export { StoredFile } from './lib/types/stored-file.interface';
+export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
 export { User } from './lib/types/user.interface';
