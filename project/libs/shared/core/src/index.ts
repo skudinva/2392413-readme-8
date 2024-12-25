@@ -12,6 +12,7 @@ export { File } from './lib/types/file.interface';
 export { Like } from './lib/types/like.interface';
 export { PostExtraProperty } from './lib/types/post-extra-property.interface';
 export { Post } from './lib/types/post.interface';
+export { RabbitRouting } from './lib/types/rabbit-routing.enum';
 export { StoredFile } from './lib/types/stored-file.interface';
 export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
