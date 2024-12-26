@@ -2,13 +2,16 @@ import {
   ConflictException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { BlogUserEntity, BlogUserRepository } from '@project/blog-user';
+import { jwtConfig } from '@project/config';
 import { AuthUser, Token, TokenPayload, User } from '@project/shared/core';
 import dayjs from 'dayjs';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -24,7 +27,9 @@ export class AuthenticationService {
   private readonly logger = new Logger(AuthenticationService.name);
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof jwtConfig>
   ) {}
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
@@ -85,7 +90,12 @@ export class AuthenticationService {
 
     try {
       const accessToken = await this.jwtService.signAsync(payload);
-      return { accessToken };
+      const refreshToken = await this.jwtService.signAsync(payload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn,
+      });
+
+      return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error(`[Token generation error]: ${error.message}`);
       throw new HttpException(
