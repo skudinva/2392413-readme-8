@@ -1,5 +1,6 @@
 export { Entity } from './lib/base/entity';
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
+export { JwtToken } from './lib/interfaces/jwt-token.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { SortDirection } from './lib/interfaces/sort-direction.interface';
 export { SortType } from './lib/interfaces/sort-type.interface';
