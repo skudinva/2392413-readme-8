@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { HTTP_CLIENT_MAX_REDIRECTS, HTTP_CLIENT_TIMEOUT } from './app.config';
+import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UsersController } from './users.controller';
 
 @Module({
@@ -11,6 +12,6 @@ import { UsersController } from './users.controller';
     }),
   ],
   controllers: [UsersController],
-  providers: [],
+  providers: [CheckAuthGuard],
 })
 export class AppModule {}
