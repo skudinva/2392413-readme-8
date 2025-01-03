@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/blog-models';
 import { BasePostgresRepository } from '@project/data-access';
@@ -97,10 +97,6 @@ export class BlogPostRepository extends BasePostgresRepository<
       },
     });
 
-    if (!post) {
-      throw new NotFoundException(`Post with id ${id} not found`);
-    }
-
     return this.createEntityFromDocument(post);
   }
 
@@ -142,15 +138,11 @@ export class BlogPostRepository extends BasePostgresRepository<
       this.getPostCount(where),
     ]);
 
-    if (!records) {
-      throw new Error('No records');
-    }
-
     return {
       entities: records.map((record) => this.createEntityFromDocument(record)),
       currentPage: query?.page,
-      totalPages: this.calculatePostsPage(postCount, take ?? 0),
-      itemsPerPage: take ?? 0,
+      totalPages: this.calculatePostsPage(postCount, take),
+      itemsPerPage: take,
       totalItems: postCount,
     };
   }

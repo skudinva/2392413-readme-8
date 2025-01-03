@@ -6,12 +6,14 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
 import { fillDto } from '@project/helpers';
 import { BlogCommentResponse } from './blog-comment.constant';
+import { BlogCommentQuery } from './blog-comment.query';
 import { BlogCommentService } from './blog-comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentRdo } from './rdo/comment.rdo';
@@ -30,8 +32,11 @@ export class BlogCommentController {
     description: BlogCommentResponse.PostNotFound,
   })
   @Get('/')
-  public async show(@Param('postId') postId: string) {
-    const comments = await this.blogCommentService.getComments(postId);
+  public async show(
+    @Param('postId') postId: string,
+    @Query() query: BlogCommentQuery
+  ) {
+    const comments = await this.blogCommentService.getComments(postId, query);
     return fillDto(
       CommentRdo,
       comments.map((comment) => comment.toPOJO())

@@ -30,10 +30,7 @@ export class BlogPostService {
     id: string,
     dto: UpdatePostDto
   ): Promise<BlogPostEntity> {
-    const existPost = await this.blogPostRepository.findById(id);
-    if (!existPost) {
-      throw new NotFoundException(`Post with id ${id} not found.`);
-    }
+    const existPost = await this.getPost(id);
 
     for (const [key, value] of Object.entries(dto)) {
       if (value !== undefined && key !== 'tags' && existPost[key] !== value) {
@@ -57,7 +54,11 @@ export class BlogPostService {
   }
 
   public async getPost(id: string): Promise<BlogPostEntity> {
-    return this.blogPostRepository.findById(id);
+    const existPost = await this.blogPostRepository.findById(id);
+    if (!existPost) {
+      throw new NotFoundException(`Post with id ${id} not found.`);
+    }
+    return existPost;
   }
 
   public async getPosts(
