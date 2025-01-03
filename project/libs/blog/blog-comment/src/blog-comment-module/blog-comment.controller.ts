@@ -16,14 +16,15 @@ import { BlogCommentResponse } from './blog-comment.constant';
 import { BlogCommentQuery } from './blog-comment.query';
 import { BlogCommentService } from './blog-comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentRdo } from './rdo/comment.rdo';
+import { BlogCommentWithPaginationRdo } from './rdo/blog-comment-with-pagination';
+import { BlogCommentRdo } from './rdo/blog-comment.rdo';
 
 @Controller('posts/:postId/comments')
 export class BlogCommentController {
   constructor(private readonly blogCommentService: BlogCommentService) {}
 
   @ApiResponse({
-    type: CommentRdo,
+    type: BlogCommentWithPaginationRdo,
     status: HttpStatus.OK,
     description: BlogCommentResponse.CommentsFound,
   })
@@ -37,14 +38,11 @@ export class BlogCommentController {
     @Query() query: BlogCommentQuery
   ) {
     const comments = await this.blogCommentService.getComments(postId, query);
-    return fillDto(
-      CommentRdo,
-      comments.map((comment) => comment.toPOJO())
-    );
+    return fillDto(BlogCommentWithPaginationRdo, comments);
   }
 
   @ApiResponse({
-    type: CommentRdo,
+    type: BlogCommentRdo,
     status: HttpStatus.CREATED,
     description: BlogCommentResponse.CommentCreated,
   })
@@ -58,7 +56,7 @@ export class BlogCommentController {
     @Body() dto: CreateCommentDto
   ) {
     const newComment = await this.blogCommentService.addComment(postId, dto);
-    return fillDto(CommentRdo, newComment.toPOJO());
+    return fillDto(BlogCommentRdo, newComment.toPOJO());
   }
 
   @ApiResponse({

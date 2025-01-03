@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BlogPostService } from '@project/blog-post';
-import { TokenPayload } from '@project/shared/core';
+import { PaginationResult, TokenPayload } from '@project/shared/core';
 import { BlogCommentEntity } from './blog-comment.entity';
 import { BlogCommentFactory } from './blog-comment.factory';
 import { BlogCommentQuery } from './blog-comment.query';
@@ -22,10 +22,19 @@ export class BlogCommentService {
   public async getComments(
     postId: string,
     query: BlogCommentQuery
-  ): Promise<BlogCommentEntity[]> {
+  ): Promise<PaginationResult<ReturnType<BlogCommentEntity['toPOJO']>>> {
     const post = await this.blogPostService.getPost(postId);
     const commentsWithPagination =
-      await this.blogCommentRepository.findByPostId(postId, query);
+      await this.blogCommentRepository.findByPostId(post.id, query);
+
+    const comments = {
+      ...commentsWithPagination,
+      entities: commentsWithPagination.entities.map((comment) =>
+        comment.toPOJO()
+      ),
+    };
+
+    return comments;
   }
 
   public async addComment(
