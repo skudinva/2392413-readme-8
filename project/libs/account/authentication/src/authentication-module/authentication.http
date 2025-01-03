@@ -3,8 +3,8 @@ POST http://localhost:3000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "user@notfound.local",
-  "dateBirth": "2012-02-22",
+  "email": "user2@notfound.local",
+  "avatar": "http://avatar.ru/1.jpg",
   "name": "Keks",
   "password": "123456"
 }
@@ -25,8 +25,13 @@ Content-Type: application/json
   "password": "123456"
 }
 
+# Get new JWT pair
+POST http://localhost:3000/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwiaWF0IjoxNzA1NjgwMDA4LCJleHAiOjE3MDgyNzIwMDh9.10Jr7bWOiFTTi42JcMgPh0GVbxa2ikvn8vUVcF8d-AY
+
 ###
-# Demo route for Pipe
-GET http://localhost:3000/api/auth/demo/1 HTTP/1.1.
+# Check user token
+POST http://localhost:3333/api/auth/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDQwMzJmYmU0Y2FlYjg2OGM2ZWVjMzYiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwiaWF0IjoxNjgzMTIxMzU1LCJleHAiOjE2ODMxMjE5NTV9.laK4-SAzu_ZMznRVsRWrHxELTGu_P48kpY_CwHPjxtk
 
 ###
