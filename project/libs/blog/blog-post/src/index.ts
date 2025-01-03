@@ -4,4 +4,5 @@ export { BlogPostRepository } from './blog-post-module/blog-post.repository';
 export { BlogPostService } from './blog-post-module/blog-post.service';
 export { CreatePostDto } from './blog-post-module/dto/create-post.dto';
 export { PostExtraPropertyDto } from './blog-post-module/dto/post-extra-property.dto';
+export { UserIdDto } from './blog-post-module/dto/user-id.dto';
 export { BlogPostRdo } from './blog-post-module/rdo/blog-post.rdo';

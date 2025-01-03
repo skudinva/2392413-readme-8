@@ -8,4 +8,7 @@ export const DEFAULT_PAGE_COUNT = 1;
 
 export const BlogPostResponse = {
   PostCreated: 'New post successfully created',
+  Like: 'Add like',
+  UnLike: 'Remove like',
+  Unauthorized: 'Need authorization',
 };
