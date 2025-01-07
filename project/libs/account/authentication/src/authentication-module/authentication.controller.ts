@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NotifyService } from '@project/account-notify';
 import { fillDto } from '@project/helpers';
 import { MongoIdValidationPipe } from '@project/pipes';
@@ -77,6 +77,7 @@ export class AuthenticationController {
     description: AuthenticationResponseMessage.UserNotFound,
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get(':id')
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const existUser = await this.authService.getUser(id);
