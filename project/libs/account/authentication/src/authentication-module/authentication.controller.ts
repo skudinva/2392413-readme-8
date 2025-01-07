@@ -98,6 +98,7 @@ export class AuthenticationController {
 
   @UseGuards(JwtAuthGuard)
   @Post('check')
+  @ApiBearerAuth('accessToken')
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
   }
