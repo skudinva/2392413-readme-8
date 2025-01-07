@@ -15,4 +15,5 @@ coverage
 # Environments
 *.env
 */uploads/*
+*/upload/*
 *.gitkeep
