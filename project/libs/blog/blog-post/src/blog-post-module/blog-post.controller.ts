@@ -30,12 +30,26 @@ export class BlogPostController {
   ) {}
 
   @Get('/:id')
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: BlogPostResponse.PostFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
   public async show(@Param('id') id: string) {
     const post = await this.blogPostService.getPost(id);
     return fillDto(BlogPostRdo, post.toPOJO());
   }
 
   @Get('/')
+  @ApiResponse({
+    type: BlogPostWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: BlogPostResponse.PostsFound,
+  })
   public async index(@Query() query: BlogPostQuery) {
     const postsWithPagination = await this.blogPostService.getPosts(query);
     const result = {
@@ -71,7 +85,7 @@ export class BlogPostController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogPostResponse.Unauthorized,
   })
-  @Post('addLike/:postId')
+  @Post('like/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async saveLike(
     @Param('postId') postId: string,
@@ -88,7 +102,7 @@ export class BlogPostController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogPostResponse.Unauthorized,
   })
-  @Post('removeLike/:postId')
+  @Post('unlike/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteLike(
     @Param('postId') postId: string,

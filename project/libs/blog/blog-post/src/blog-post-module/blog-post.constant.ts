@@ -11,4 +11,7 @@ export const BlogPostResponse = {
   Like: 'Add like',
   UnLike: 'Remove like',
   Unauthorized: 'Need authorization',
+  PostsFound: 'Posts found',
+  PostFound: 'Post found',
+  PostNotFound: 'Post not found',
 };
