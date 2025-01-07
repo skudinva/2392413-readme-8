@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { BlogCommentModule } from '@project/blog-comment';
 import { BlogLikeModule } from '@project/blog-like';
 import { PrismaClientModule } from '@project/blog-models';
 import { BlogTagModule } from '@project/blog-tag';
@@ -9,12 +8,7 @@ import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostService } from './blog-post.service';
 
 @Module({
-  imports: [
-    BlogTagModule,
-    BlogLikeModule,
-    BlogCommentModule,
-    PrismaClientModule,
-  ],
+  imports: [BlogTagModule, BlogLikeModule, PrismaClientModule],
   controllers: [BlogPostController],
   providers: [BlogPostService, BlogPostRepository, BlogPostFactory],
   exports: [BlogPostService],

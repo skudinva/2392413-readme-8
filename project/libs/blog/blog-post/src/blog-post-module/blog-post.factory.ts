@@ -26,7 +26,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     newPost.likesCount = 0;
     newPost.commentsCount = 0;
     newPost.extraProperty = dto.extraProperty;
-    newPost.comments = [];
+    //newPost.comments = [];
     newPost.originAuthorId = dto.originAuthorId;
     newPost.originPostId = dto.originPostId;
     newPost.tags = tags;
