@@ -42,7 +42,7 @@ PATCH http://localhost:3001/api/posts/0eb6c19a-962c-4fc7-9106-7d46b09aaab8 HTTP/
 Content-Type: application/json
 
 {
-  "postType: "Video",
+  "postType": "Video",
   "authorId": "8986a240-2be7-543b-abce-f3ee6a9e304e",
   "isRepost": false,
   "tags": ["tag1", "tag2"},
