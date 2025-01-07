@@ -91,6 +91,7 @@ export class AuthenticationController {
     status: HttpStatus.OK,
     description: 'Get a new access/refresh tokens',
   })
+  @ApiBearerAuth('refreshToken')
   public async refreshToken(@Req() { user }: RequestWithUser) {
     return this.authService.createUserToken(user);
   }
