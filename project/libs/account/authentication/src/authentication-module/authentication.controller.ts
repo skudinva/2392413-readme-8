@@ -9,11 +9,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NotifyService } from '@project/account-notify';
 import { fillDto } from '@project/helpers';
 import { MongoIdValidationPipe } from '@project/pipes';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
@@ -60,6 +61,7 @@ export class AuthenticationController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiBody({ type: LoginUserDto })
   public async login(@Req() { user }: RequestWithUser) {
     const userToken = await this.authService.createUserToken(user);
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });

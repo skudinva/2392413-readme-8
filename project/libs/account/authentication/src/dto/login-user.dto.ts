@@ -5,7 +5,7 @@ import { AuthenticationValidateMessage } from '../authentication-module/authenti
 export class LoginUserDto {
   @ApiProperty({
     description: 'User unique address',
-    example: 'user@user.ru',
+    example: 'user2@notfound.local',
   })
   @IsEmail({}, { message: AuthenticationValidateMessage.EmailNotValid })
   public email: string;
