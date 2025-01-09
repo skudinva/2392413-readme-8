@@ -52,8 +52,8 @@ export class BlogPostRepository extends BasePostgresRepository<
       data: {
         postType: pojoPost.postType,
         isRepost: pojoPost.isRepost,
-        originAuthorId: pojoPost.originAuthorId ?? '',
-        originPostId: pojoPost.originPostId ?? '',
+        originAuthorId: pojoPost.originAuthorId ?? undefined,
+        originPostId: pojoPost.originPostId ?? undefined,
         state: pojoPost.state,
         publicDate: pojoPost.publicDate,
         likesCount: pojoPost.likesCount,
