@@ -29,7 +29,7 @@ function validateDependentsPostProperties(object: DependentsPostProperties) {
   } else if (postType === PostType.Photo) {
     return isNotEmpties(extraProperty, ['photo']);
   } else if (postType === PostType.Quote) {
-    return isNotEmpties(extraProperty, ['text']);
+    return isNotEmpties(extraProperty, ['quoteText', 'quoteAuthor']);
   } else if (postType === PostType.Text) {
     return isNotEmpties(extraProperty, ['name', 'announce', 'text']);
   } else if (postType === PostType.Video) {

@@ -5,4 +5,6 @@ export interface PostExtraProperty {
   text?: string | null;
   announce?: string | null;
   name?: string | null;
+  quoteText?: string | null;
+  quoteAuthor?: string | null;
 }
