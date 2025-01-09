@@ -75,6 +75,7 @@ export class PostExtraPropertyDto {
     example: 'Example quote author',
   })
   @IsString()
+  @IsOptional()
   @Length(3, 50)
   public quoteAuthor: string;
 }
