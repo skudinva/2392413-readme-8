@@ -32,11 +32,11 @@ export class CreatePostDto {
   authorId!: string;
 
   @IsBoolean()
+  @IsOptional()
   @ApiProperty({
     description: 'Repost flag',
     example: 'false',
   })
-  @IsOptional()
   isRepost!: boolean;
 
   @IsString()
@@ -46,7 +46,6 @@ export class CreatePostDto {
     description: 'Source author Id',
     example: '999aef3b7eadb76365f3c2cb',
   })
-  @IsMongoId()
   originAuthorId?: string;
 
   @IsString()
