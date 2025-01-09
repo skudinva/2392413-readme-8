@@ -47,12 +47,12 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       //comments,
     } = post;
 
-    this.id = id ?? '';
+    this.id = id ?? undefined;
     this.postType = postType;
     this.authorId = authorId;
     this.isRepost = isRepost;
-    this.originAuthorId = originAuthorId ?? '';
-    this.originPostId = originPostId ?? '';
+    this.originAuthorId = originAuthorId ?? undefined;
+    this.originPostId = originPostId ?? undefined;
     this.tags = [];
     this.state = state;
     this.createdAt = createdAt;

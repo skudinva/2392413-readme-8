@@ -17,6 +17,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     tags: BlogTagEntity[]
   ): BlogPostEntity {
     const newPost = new BlogPostEntity();
+    newPost.id = undefined;
     newPost.postType = dto.postType;
     newPost.authorId = dto.authorId;
     newPost.isRepost = dto.isRepost;
