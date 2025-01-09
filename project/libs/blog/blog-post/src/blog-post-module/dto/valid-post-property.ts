@@ -8,6 +8,15 @@ import {
 
 type DependentsPostProperties = Pick<Post, 'postType' | 'extraProperty'>;
 
+const validPostTypeProperties: Map<PostType, (keyof PostExtraProperty)[]> =
+  new Map([
+    [PostType.Link, ['url', 'describe']],
+    [PostType.Photo, ['photo']],
+    [PostType.Quote, ['quoteText', 'quoteAuthor']],
+    [PostType.Text, ['name', 'announce', 'text']],
+    [PostType.Video, ['name', 'url']],
+  ]);
+
 function isNotEmpties(
   extraProperty: PostExtraProperty,
   keys: (keyof PostExtraProperty)[]
@@ -18,24 +27,35 @@ function isNotEmpties(
   });
 }
 
+function isValidFieldSet(
+  extraProperty: PostExtraProperty,
+  keys: (keyof PostExtraProperty)[]
+): boolean {
+  return Object.keys(extraProperty).every((key) => {
+    if (keys.findIndex((validKey) => validKey === key) !== -1) {
+      return true;
+    }
+
+    const value = extraProperty[key];
+    return value === undefined || value === null || !value.length;
+  });
+}
+
 function validateDependentsPostProperties(object: DependentsPostProperties) {
   const { postType, extraProperty } = object;
   if (extraProperty === null) {
     return false;
   }
-
-  if (postType === PostType.Link) {
-    return isNotEmpties(extraProperty, ['url', 'describe']);
-  } else if (postType === PostType.Photo) {
-    return isNotEmpties(extraProperty, ['photo']);
-  } else if (postType === PostType.Quote) {
-    return isNotEmpties(extraProperty, ['quoteText', 'quoteAuthor']);
-  } else if (postType === PostType.Text) {
-    return isNotEmpties(extraProperty, ['name', 'announce', 'text']);
-  } else if (postType === PostType.Video) {
-    return isNotEmpties(extraProperty, ['name', 'url']);
+  const validField = validPostTypeProperties.get(postType);
+  if (!validField.length) {
+    return false;
   }
-  return false;
+
+  if (!isValidFieldSet(extraProperty, validField)) {
+    return false;
+  }
+
+  return isNotEmpties(extraProperty, validField);
 }
 
 export function IsValidPostCombination(validationOptions?: ValidationOptions) {
