@@ -59,6 +59,11 @@ export class BlogPostController {
     return fillDto(BlogPostWithPaginationRdo, result);
   }
 
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.CREATED,
+    description: BlogPostResponse.PostCreated,
+  })
   @Post('/')
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);

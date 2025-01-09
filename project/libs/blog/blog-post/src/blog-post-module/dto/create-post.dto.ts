@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PostState, PostType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
@@ -5,7 +6,6 @@ import {
   IsArray,
   IsBoolean,
   IsIn,
-  IsISO8601,
   IsMongoId,
   IsOptional,
   IsString,
@@ -16,23 +16,45 @@ import { PostExtraPropertyDto } from './post-extra-property.dto';
 import { IsValidPostCombination } from './valid-post-property';
 
 export class CreatePostDto {
+  @ApiProperty({
+    description: 'Post type: video, photo, text, link, quote',
+    example: 'Video',
+  })
   @IsIn(Object.values(PostType))
   postType!: PostType;
 
   @IsString()
   @IsMongoId()
+  @ApiProperty({
+    description: 'Author id of the post',
+    example: '888aef3b7eadb76365f3c2cb',
+  })
   authorId!: string;
 
   @IsBoolean()
+  @ApiProperty({
+    description: 'Repost flag',
+    example: 'false',
+  })
+  @IsOptional()
   isRepost!: boolean;
 
   @IsString()
   @IsOptional()
   @IsMongoId()
+  @ApiProperty({
+    description: 'Source author Id',
+    example: '999aef3b7eadb76365f3c2cb',
+  })
+  @IsMongoId()
   originAuthorId?: string;
 
   @IsString()
   @IsOptional()
+  @ApiProperty({
+    description: 'Source post Id',
+    example: '0a7cbc9e-9754-4187-ad0f-5b99d4b0814b',
+  })
   originPostId?: string;
 
   @IsOptional()
@@ -40,18 +62,24 @@ export class CreatePostDto {
   @ArrayMaxSize(8)
   @IsArray()
   @Length(3, 10, { each: true })
+  @ApiProperty({
+    description: 'List of tags',
+    example: ['#sometag1'],
+  })
   tags?: string[];
 
   @IsIn(Object.values(PostState))
+  @ApiProperty({
+    description: 'Post state',
+    example: 'Published',
+  })
   state!: PostState;
-
-  @IsISO8601()
-  publicDate!: Date;
 
   @ValidateNested()
   @Type(() => PostExtraPropertyDto)
   @IsValidPostCombination({
     message: 'Invalid combination of PostType',
   })
+  @ApiProperty()
   extraProperty!: PostExtraPropertyDto;
 }
