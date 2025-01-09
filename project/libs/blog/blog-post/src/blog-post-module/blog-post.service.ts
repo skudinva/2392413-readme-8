@@ -32,8 +32,20 @@ export class BlogPostService {
   ): Promise<BlogPostEntity> {
     const existPost = await this.getPost(id);
 
+    for (const [key] of Object.entries(existPost.extraProperty)) {
+      existPost.extraProperty[key] =
+        key === 'id' || key === 'postId'
+          ? existPost[key]
+          : dto.extraProperty[key] ?? null;
+    }
+
     for (const [key, value] of Object.entries(dto)) {
-      if (value !== undefined && key !== 'tags' && existPost[key] !== value) {
+      if (
+        value !== undefined &&
+        key !== 'extraProperty' &&
+        key !== 'tags' &&
+        existPost[key] !== value
+      ) {
         existPost[key] = value;
       }
       if (key === 'tags' && value) {
