@@ -70,6 +70,22 @@ export class BlogPostController {
     return fillDto(BlogPostRdo, newPost.toPOJO());
   }
 
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostResponse.PostDeleted,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.AccessDeny,
+  })
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(@Param('id') id: string) {

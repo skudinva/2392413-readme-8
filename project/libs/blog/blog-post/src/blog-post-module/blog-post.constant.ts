@@ -14,4 +14,6 @@ export const BlogPostResponse = {
   PostsFound: 'Posts found',
   PostFound: 'Post found',
   PostNotFound: 'Post not found',
+  AccessDeny: 'AccessDeny',
+  PostDeleted: 'Post deleted',
 };
