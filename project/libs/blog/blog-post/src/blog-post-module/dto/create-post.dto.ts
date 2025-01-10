@@ -29,7 +29,7 @@ export class CreatePostDto {
   @IsMongoId()
   @ApiProperty({
     description: 'Author id of the post',
-    example: '888aef3b7eadb76365f3c2cb',
+    example: '677cd8d75ff92067f1de5911',
   })
   authorId!: string;
 

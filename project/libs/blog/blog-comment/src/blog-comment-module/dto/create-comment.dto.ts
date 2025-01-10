@@ -17,7 +17,7 @@ export class CreateCommentDto {
   @IsMongoId({ message: BlogCommentValidateMessage.InvalidID })
   @ApiProperty({
     description: 'User Id',
-    example: '888aef3b7eadb76365f3c2cb',
+    example: '677cd8d75ff92067f1de5911',
   })
   public userId!: string;
 }
