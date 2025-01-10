@@ -20,7 +20,7 @@ import { BlogCommentWithPaginationRdo } from './rdo/blog-comment-with-pagination
 import { BlogCommentRdo } from './rdo/blog-comment.rdo';
 
 @ApiTags('blog comment')
-@Controller('posts/:postId/comments')
+@Controller('comments')
 export class BlogCommentController {
   constructor(private readonly blogCommentService: BlogCommentService) {}
 
@@ -33,7 +33,7 @@ export class BlogCommentController {
     status: HttpStatus.NOT_FOUND,
     description: BlogCommentResponse.PostNotFound,
   })
-  @Get('/')
+  @Get('/:postId')
   public async show(
     @Param('postId') postId: string,
     @Query() query: BlogCommentQuery
@@ -51,7 +51,7 @@ export class BlogCommentController {
     status: HttpStatus.NOT_FOUND,
     description: BlogCommentResponse.PostNotFound,
   })
-  @Post('/')
+  @Post('/:postId')
   public async create(
     @Param('postId') postId: string,
     @Body() dto: CreateCommentDto
