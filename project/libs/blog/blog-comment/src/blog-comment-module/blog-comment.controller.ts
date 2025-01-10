@@ -9,7 +9,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
 import { fillDto } from '@project/helpers';
 import { BlogCommentResponse } from './blog-comment.constant';
@@ -19,6 +19,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { BlogCommentWithPaginationRdo } from './rdo/blog-comment-with-pagination';
 import { BlogCommentRdo } from './rdo/blog-comment.rdo';
 
+@ApiTags('blog comment')
 @Controller('posts/:postId/comments')
 export class BlogCommentController {
   constructor(private readonly blogCommentService: BlogCommentService) {}

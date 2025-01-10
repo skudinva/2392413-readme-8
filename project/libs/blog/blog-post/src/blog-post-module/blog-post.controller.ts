@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlogLikeService } from '@project/blog-like';
 import { fillDto } from '@project/helpers';
 import { BlogPostResponse } from './blog-post.constant';
@@ -39,6 +39,7 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostResponse.PostNotFound,
   })
+  @ApiTags('blog post')
   public async show(@Param('id') id: string) {
     const post = await this.blogPostService.getPost(id);
     return fillDto(BlogPostRdo, post.toPOJO());
@@ -50,6 +51,7 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: BlogPostResponse.PostsFound,
   })
+  @ApiTags('blog post')
   public async index(@Query() query: BlogPostQuery) {
     const postsWithPagination = await this.blogPostService.getPosts(query);
     const result = {
@@ -65,6 +67,7 @@ export class BlogPostController {
     description: BlogPostResponse.PostCreated,
   })
   @Post('/')
+  @ApiTags('blog post')
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);
     return fillDto(BlogPostRdo, newPost.toPOJO());
@@ -88,6 +91,7 @@ export class BlogPostController {
   })
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiTags('blog post')
   public async destroy(@Param('id') id: string) {
     await this.blogPostService.deletePost(id);
   }
@@ -110,6 +114,7 @@ export class BlogPostController {
     description: BlogPostResponse.AccessDeny,
   })
   @Patch('/:id')
+  @ApiTags('blog post')
   public async update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
     const updatedPost = await this.blogPostService.updatePost(id, dto);
     return fillDto(BlogPostRdo, updatedPost.toPOJO());
@@ -129,6 +134,7 @@ export class BlogPostController {
   })
   @Post('like/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiTags('blog like')
   public async saveLike(
     @Param('postId') postId: string,
     @Body() { userId }: UserIdDto
@@ -150,6 +156,7 @@ export class BlogPostController {
   })
   @Post('unlike/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiTags('blog like')
   public async deleteLike(
     @Param('postId') postId: string,
     @Body() { userId }: UserIdDto
