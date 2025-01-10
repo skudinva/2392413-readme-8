@@ -20,8 +20,10 @@ export class UpdatePostDto {
   @IsIn(Object.values(PostType))
   @IsOptional()
   @ApiProperty({
-    description: 'Post type: video, photo, text, link, quote',
+    description: 'Post type',
     example: 'Video',
+    enum: PostType,
+    enumName: 'PostType',
   })
   postType?: PostType;
 
@@ -75,6 +77,8 @@ export class UpdatePostDto {
   @ApiProperty({
     description: 'Post state',
     example: 'Published',
+    enum: PostState,
+    enumName: 'PostState',
   })
   state?: PostState;
 

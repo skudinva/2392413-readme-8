@@ -17,8 +17,10 @@ import { IsValidPostCombination } from './valid-post-property';
 
 export class CreatePostDto {
   @ApiProperty({
-    description: 'Post type: video, photo, text, link, quote',
+    description: 'Post type',
     example: 'Video',
+    enum: PostType,
+    enumName: 'PostType',
   })
   @IsIn(Object.values(PostType))
   postType!: PostType;
@@ -71,6 +73,8 @@ export class CreatePostDto {
   @ApiProperty({
     description: 'Post state',
     example: 'Published',
+    enum: PostState,
+    enumName: 'PostState',
   })
   state!: PostState;
 

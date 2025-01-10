@@ -92,6 +92,23 @@ export class BlogPostController {
     await this.blogPostService.deletePost(id);
   }
 
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.ACCEPTED,
+    description: BlogPostResponse.PostUpdated,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.AccessDeny,
+  })
   @Patch('/:id')
   public async update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
     const updatedPost = await this.blogPostService.updatePost(id, dto);

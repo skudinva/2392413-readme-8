@@ -7,7 +7,8 @@ export const DEFAULT_SORT_TYPE = SortType.DATE;
 export const DEFAULT_PAGE_COUNT = 1;
 
 export const BlogPostResponse = {
-  PostCreated: 'New post successfully created',
+  PostCreated: 'New post created',
+  PostUpdated: 'Post updated',
   Like: 'Add like',
   UnLike: 'Remove like',
   Unauthorized: 'Need authorization',
