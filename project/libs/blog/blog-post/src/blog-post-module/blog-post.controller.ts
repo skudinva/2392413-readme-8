@@ -123,6 +123,10 @@ export class BlogPostController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogPostResponse.Unauthorized,
   })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.LikeAlreadyExists,
+  })
   @Post('like/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async saveLike(
@@ -139,6 +143,10 @@ export class BlogPostController {
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.LikeNotExists,
   })
   @Post('unlike/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)

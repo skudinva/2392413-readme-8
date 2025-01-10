@@ -14,7 +14,7 @@ export class BlogLikeRepository extends BasePostgresRepository<
     super(likeFactory, client);
   }
   public async isLikeExists({ userId, postId }: Like): Promise<boolean> {
-    const like = this.client.like.findFirst({
+    const like = await this.client.like.findFirst({
       where: {
         userId,
         postId,

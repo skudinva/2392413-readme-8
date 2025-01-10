@@ -11,6 +11,8 @@ export const BlogPostResponse = {
   PostUpdated: 'Post updated',
   Like: 'Add like',
   UnLike: 'Remove like',
+  LikeAlreadyExists: 'Like already exist',
+  LikeNotExists: 'Like not exists',
   Unauthorized: 'Need authorization',
   PostsFound: 'Posts found',
   PostFound: 'Post found',
