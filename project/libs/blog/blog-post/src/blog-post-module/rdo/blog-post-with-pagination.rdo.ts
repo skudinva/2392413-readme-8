@@ -6,7 +6,7 @@ import { BlogPostRdo } from './blog-post.rdo';
 export class BlogPostWithPaginationRdo {
   @Expose()
   @ApiProperty({
-    description: 'List of items of selected Entity',
+    description: 'List of entity',
   })
   @Type(() => BlogPostRdo)
   @ValidateNested({ always: true })
