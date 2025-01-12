@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -15,6 +16,7 @@ import { fillDto } from '@project/helpers';
 import { MongoIdValidationPipe } from '@project/pipes';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
@@ -48,6 +50,29 @@ export class AuthenticationController {
     await this.notifyService.registerSubscriber({ email, name });
 
     return newUser.toPOJO();
+  }
+
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.PasswordUpdated,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Patch('update')
+  public async changePassword(
+    @Body() dto: UpdateUserDto,
+    @Req() { user: payload }: RequestWithTokenPayload
+  ) {
+    const user = await this.authService.updatePassword(dto, payload?.sub);
+
+    return fillDto(UserRdo, user.toPOJO());
   }
 
   @ApiResponse({

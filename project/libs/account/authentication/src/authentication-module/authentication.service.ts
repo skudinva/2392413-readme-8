@@ -17,11 +17,13 @@ import { AuthUser, Token, User } from '@project/shared/core';
 import dayjs from 'dayjs';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { RefreshTokenService } from '../refresh-token-module/refresh-token.service';
 import {
   AUTH_USER_EXISTS,
   AUTH_USER_NOT_FOUND,
   AUTH_USER_PASSWORD_WRONG,
+  AuthenticationResponseMessage,
 } from './authentication.constant';
 
 @Injectable()
@@ -120,5 +122,22 @@ export class AuthenticationService {
     }
 
     return existUser;
+  }
+
+  public async updatePassword(dto: UpdateUserDto, id?: string) {
+    if (!id) {
+      throw new UnauthorizedException(
+        AuthenticationResponseMessage.Unauthorized
+      );
+    }
+
+    const existUser = await this.blogUserRepository.findById(id);
+    if (!existUser) {
+      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+    }
+
+    const userEntity = await existUser.setPassword(dto.password);
+    this.blogUserRepository.updatePassword(id, userEntity.passwordHash);
+    return userEntity;
   }
 }
