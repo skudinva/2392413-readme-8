@@ -46,6 +46,9 @@ export class AuthenticationService {
       avatar,
       registerDate: dayjs().toDate(),
       passwordHash: '',
+      subscriptions: [],
+      subscribersCount: 0,
+      postsCount: 0,
     };
 
     const existUser = await this.blogUserRepository.findByEmail(email);
