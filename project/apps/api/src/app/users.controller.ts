@@ -23,6 +23,7 @@ import {
 import { createUrlForFile } from '@project/helpers';
 import { File } from '@project/shared/core';
 import FormData from 'form-data';
+import 'multer';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 
