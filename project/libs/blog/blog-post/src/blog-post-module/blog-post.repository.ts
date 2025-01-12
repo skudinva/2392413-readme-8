@@ -118,8 +118,8 @@ export class BlogPostRepository extends BasePostgresRepository<
       };
     }
 
-    if (query?.sortDirection) {
-      orderBy.createdAt = query.sortDirection;
+    if (query?.sortBy) {
+      orderBy[query.sortBy] = query.sortDirection;
     }
 
     const [records, postCount] = await Promise.all([
