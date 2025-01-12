@@ -88,4 +88,19 @@ export class BlogCommentRepository extends BasePostgresRepository<
       totalItems: commentsCount,
     };
   }
+
+  public async findByUserAndPostId(
+    postId: string,
+    userId: string
+  ): Promise<BlogCommentEntity> {
+    const document = await this.client.comment.findFirst({
+      where: { postId, userId },
+    });
+
+    if (document) {
+      return this.createEntityFromDocument(document);
+    }
+
+    return null;
+  }
 }

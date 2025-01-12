@@ -41,6 +41,15 @@ export class BlogCommentService {
     postId: string,
     dto: CreateCommentDto
   ): Promise<BlogCommentEntity> {
+    const existsComment = this.blogCommentRepository.findByUserAndPostId(
+      postId,
+      dto.userId
+    );
+
+    if (!existsComment) {
+      throw new ConflictException('User already comment this post');
+    }
+
     const newComment = this.blogCommentFactory.createFromDto(dto, postId);
     await this.blogCommentRepository.save(newComment);
     await this.blogPostService.updateCommentCount(postId, 1);
