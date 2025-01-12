@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Patch,
   Post,
@@ -83,6 +85,20 @@ export class UsersController {
     const { data } = await this.httpService.axiosRef.patch(
       `${ApplicationServiceURL.Users}/update`,
       dto,
+      {
+        headers: {
+          Authorization: req.headers['authorization'],
+        },
+      }
+    );
+
+    return data;
+  }
+
+  @Get(':id')
+  public async show(@Param('id') id: string, @Req() req: Request) {
+    const { data } = await this.httpService.axiosRef.get(
+      `${ApplicationServiceURL.Users}/${id}`,
       {
         headers: {
           Authorization: req.headers['authorization'],
