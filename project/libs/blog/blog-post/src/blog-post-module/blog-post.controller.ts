@@ -74,6 +74,22 @@ export class BlogPostController {
   }
 
   @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.CREATED,
+    description: BlogPostResponse.PostCreated,
+  })
+  @Post('/repost/:postId')
+  @ApiTags('blog post')
+  public async createRepost(
+    @Param('postId') postId: string,
+    @Body() { userId }: UserIdDto
+  ) {
+    const newPost = await this.blogPostService.createRepost(postId, userId);
+
+    return fillDto(BlogPostRdo, newPost.toPOJO());
+  }
+
+  @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: BlogPostResponse.PostDeleted,
   })

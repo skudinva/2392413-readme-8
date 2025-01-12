@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BlogTagService } from '@project/blog-tag';
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostEntity } from './blog-post.entity';
@@ -77,6 +81,28 @@ export class BlogPostService {
     query?: BlogPostQuery
   ): Promise<PaginationResult<BlogPostEntity | null>> {
     return this.blogPostRepository.find(query);
+  }
+
+  public async createRepost(
+    postId: string,
+    userId: string
+  ): Promise<BlogPostEntity> {
+    const existsPost = await this.getPost(postId);
+
+    const existRepost = await this.blogPostRepository.findRepost(
+      postId,
+      userId
+    );
+
+    if (existRepost) {
+      throw new ConflictException(
+        `You already make repost of postId ${postId}`
+      );
+    }
+
+    const newPost = BlogPostFactory.createRepost(existsPost.toPOJO(), userId);
+    await this.blogPostRepository.save(newPost);
+    return newPost;
   }
 
   public async updateCommentCount(

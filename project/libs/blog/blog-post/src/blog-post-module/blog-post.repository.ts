@@ -144,4 +144,22 @@ export class BlogPostRepository extends BasePostgresRepository<
       totalItems: postCount,
     };
   }
+
+  public async findRepost(
+    originPostId: string,
+    authorId: string
+  ): Promise<BlogPostEntity | null> {
+    const post = await this.client.post.findFirst({
+      where: {
+        originPostId,
+        authorId,
+      },
+      include: {
+        extraProperty: true,
+        tags: true,
+      },
+    });
+
+    return this.createEntityFromDocument(post);
+  }
 }

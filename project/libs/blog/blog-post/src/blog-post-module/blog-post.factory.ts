@@ -27,10 +27,31 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     newPost.likesCount = 0;
     newPost.commentsCount = 0;
     newPost.extraProperty = dto.extraProperty;
-    //newPost.comments = [];
     newPost.originAuthorId = dto.originAuthorId;
     newPost.originPostId = dto.originPostId;
     newPost.tags = tags;
+
+    return newPost;
+  }
+
+  public static createRepost(
+    originalPost: Post,
+    userId: string
+  ): BlogPostEntity {
+    const newPost = new BlogPostEntity();
+    for (const [key, value] of Object.entries(originalPost)) {
+      newPost[key] = value;
+    }
+
+    newPost.id = undefined;
+    newPost.isRepost = true;
+    newPost.authorId = userId;
+    newPost.originPostId = originalPost.id;
+    newPost.originAuthorId = originalPost.authorId;
+    newPost.createdAt = dayjs().toDate();
+    newPost.publicDate = dayjs().toDate();
+    newPost.likesCount = 0;
+    newPost.commentsCount = 0;
 
     return newPost;
   }
