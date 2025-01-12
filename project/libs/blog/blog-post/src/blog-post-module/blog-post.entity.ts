@@ -88,7 +88,18 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       publicDate: this.publicDate,
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,
-      extraProperty: this.extraProperty ?? null,
+      extraProperty: this.extraProperty
+        ? {
+            url: this.extraProperty.url,
+            describe: this.extraProperty.describe,
+            photo: this.extraProperty.photo,
+            text: this.extraProperty.text,
+            announce: this.extraProperty.announce,
+            name: this.extraProperty.name,
+            quoteText: this.extraProperty.quoteText,
+            quoteAuthor: this.extraProperty.quoteAuthor,
+          }
+        : null,
       tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
       //comments: this.comments.map((commentEntity) => commentEntity.toPOJO()),
     };

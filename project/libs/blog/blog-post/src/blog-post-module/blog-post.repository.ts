@@ -57,6 +57,7 @@ export class BlogPostRepository extends BasePostgresRepository<
         state: pojoPost.state,
         publicDate: pojoPost.publicDate,
         likesCount: pojoPost.likesCount,
+        commentsCount: pojoPost.commentsCount,
         tags: {
           set: pojoPost.tags.map(({ id }) => ({ id })),
         },
@@ -70,7 +71,6 @@ export class BlogPostRepository extends BasePostgresRepository<
         },
       },
       include: {
-        comments: true,
         extraProperty: true,
         tags: true,
       },
@@ -91,7 +91,6 @@ export class BlogPostRepository extends BasePostgresRepository<
     const post = await this.client.post.findUnique({
       where: { id },
       include: {
-        comments: true,
         extraProperty: true,
         tags: true,
       },
@@ -130,7 +129,6 @@ export class BlogPostRepository extends BasePostgresRepository<
         skip,
         take,
         include: {
-          comments: true,
           extraProperty: true,
           tags: true,
         },

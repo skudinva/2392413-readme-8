@@ -43,6 +43,7 @@ export class BlogCommentService {
   ): Promise<BlogCommentEntity> {
     const newComment = this.blogCommentFactory.createFromDto(dto, postId);
     await this.blogCommentRepository.save(newComment);
+    await this.blogPostService.updateCommentCount(postId, 1);
 
     return newComment;
   }
@@ -55,6 +56,7 @@ export class BlogCommentService {
 
     try {
       await this.blogCommentRepository.deleteById(id);
+      await this.blogPostService.updateCommentCount(existComment.postId, -1);
     } catch {
       throw new NotFoundException(`Comment with id ${id} not found`);
     }

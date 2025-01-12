@@ -78,4 +78,13 @@ export class BlogPostService {
   ): Promise<PaginationResult<BlogPostEntity | null>> {
     return this.blogPostRepository.find(query);
   }
+
+  public async updateCommentCount(
+    postId: string,
+    value: number
+  ): Promise<void> {
+    const existPost = await this.getPost(postId);
+    existPost.commentsCount += value;
+    await this.blogPostRepository.update(existPost);
+  }
 }
