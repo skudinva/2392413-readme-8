@@ -5,6 +5,7 @@ import {
   FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -12,7 +13,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateUserDto, LoginUserDto } from '@project/authentication';
+import {
+  CreateUserDto,
+  LoginUserDto,
+  UpdateUserDto,
+} from '@project/authentication';
 import { createUrlForFile } from '@project/helpers';
 import { File } from '@project/shared/core';
 import FormData from 'form-data';
@@ -70,6 +75,21 @@ export class UsersController {
       `${ApplicationServiceURL.Users}/login`,
       loginUserDto
     );
+    return data;
+  }
+
+  @Patch('update')
+  public async update(@Body() dto: UpdateUserDto, @Req() req: Request) {
+    const { data } = await this.httpService.axiosRef.patch(
+      `${ApplicationServiceURL.Users}/update`,
+      dto,
+      {
+        headers: {
+          Authorization: req.headers['authorization'],
+        },
+      }
+    );
+
     return data;
   }
 
