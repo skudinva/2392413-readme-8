@@ -81,10 +81,19 @@ export class BlogPostService {
 
   public async updateCommentCount(
     postId: string,
-    value: number
+    diffValue: number
   ): Promise<void> {
     const existPost = await this.getPost(postId);
-    existPost.commentsCount += value;
+    existPost.commentsCount += diffValue;
+    await this.blogPostRepository.update(existPost);
+  }
+
+  public async updateLikeCount(
+    postId: string,
+    diffValue: number
+  ): Promise<void> {
+    const existPost = await this.getPost(postId);
+    existPost.likesCount += diffValue;
     await this.blogPostRepository.update(existPost);
   }
 }

@@ -140,6 +140,7 @@ export class BlogPostController {
     @Body() { userId }: UserIdDto
   ) {
     await this.blogLikeService.like({ postId, userId });
+    await this.blogPostService.updateCommentCount(postId, 1);
   }
 
   @ApiResponse({
@@ -162,5 +163,6 @@ export class BlogPostController {
     @Body() { userId }: UserIdDto
   ) {
     await this.blogLikeService.unlike({ postId, userId });
+    await this.blogPostService.updateCommentCount(postId, -1);
   }
 }
