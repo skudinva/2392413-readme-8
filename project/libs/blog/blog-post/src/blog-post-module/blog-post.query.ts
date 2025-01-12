@@ -23,7 +23,6 @@ export class BlogPostQuery {
   @IsOptional()
   @ApiProperty({
     description: 'Tags',
-    example: ['#sometag'],
     required: false,
   })
   public tags?: string[];
