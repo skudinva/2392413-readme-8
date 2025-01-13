@@ -126,6 +126,10 @@ export class AuthenticationController {
   @UseGuards(JwtAuthGuard)
   @Post('check')
   @ApiBearerAuth('accessToken')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.UserFound,
+  })
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
   }

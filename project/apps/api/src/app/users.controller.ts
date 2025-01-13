@@ -198,4 +198,25 @@ export class UsersController {
 
     return data;
   }
+
+  @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.UserFound,
+  })
+  @Post('check')
+  public async checkToken(@Req() req: Request) {
+    const { data } = await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Users}/check`,
+      null,
+      {
+        headers: {
+          Authorization: req.headers['authorization'],
+        },
+      }
+    );
+
+    return data;
+  }
 }
