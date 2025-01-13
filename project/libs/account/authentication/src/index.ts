@@ -6,3 +6,4 @@ export { LoginUserDto } from './dto/login-user.dto';
 export { RegisterUserDto } from './dto/register-user.dto';
 export { UpdateUserDto } from './dto/update-user.dto';
 export { LoggedUserRdo } from './rdo/logged-user.rdo';
+export { UserRdo } from './rdo/user.rdo';

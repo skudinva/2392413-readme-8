@@ -30,6 +30,7 @@ import {
   LoginUserDto,
   RegisterUserDto,
   UpdateUserDto,
+  UserRdo,
 } from '@project/authentication';
 import { createUrlForFile } from '@project/helpers';
 import { File } from '@project/shared/core';
@@ -150,6 +151,21 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.UserFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
   public async show(@Param('id') id: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Users}/${id}`,
@@ -164,6 +180,11 @@ export class UsersController {
   }
 
   @Post('refresh')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Get a new access/refresh tokens',
+  })
+  @ApiBearerAuth('refreshToken')
   public async refreshToken(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/refresh`,

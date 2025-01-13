@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
   Patch,
@@ -101,6 +100,10 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: AuthenticationResponseMessage.UserNotFound,
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('accessToken')
   @Get(':id')
@@ -111,9 +114,8 @@ export class AuthenticationController {
 
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     description: 'Get a new access/refresh tokens',
   })
   @ApiBearerAuth('refreshToken')
