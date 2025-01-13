@@ -53,7 +53,7 @@ export class AuthenticationController {
   }
 
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     description: AuthenticationResponseMessage.PasswordUpdated,
   })
   @ApiResponse({

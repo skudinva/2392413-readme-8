@@ -4,6 +4,7 @@ import {
   Controller,
   FileTypeValidator,
   Get,
+  HttpStatus,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
@@ -12,12 +13,20 @@ import {
   Req,
   UploadedFile,
   UseFilters,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  AuthenticationResponseMessage,
   CreateUserDto,
+  LoggedUserRdo,
   LoginUserDto,
   RegisterUserDto,
   UpdateUserDto,
@@ -28,6 +37,7 @@ import FormData from 'form-data';
 import 'multer';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { CheckAuthGuard } from './guards/check-auth.guard';
 
 const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/static/default-avatar.jpg`;
 
@@ -40,6 +50,14 @@ export class UsersController {
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiConsumes('multipart/form-data')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.UserCreated,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: AuthenticationResponseMessage.UserExist,
+  })
   public async create(
     @Body() dto: RegisterUserDto,
     @UploadedFile(
@@ -85,6 +103,15 @@ export class UsersController {
   }
 
   @Post('login')
+  @ApiResponse({
+    type: LoggedUserRdo,
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.LoggedSuccess,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.LoggedError,
+  })
   public async login(@Body() loginUserDto: LoginUserDto) {
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/login`,
@@ -94,6 +121,20 @@ export class UsersController {
   }
 
   @Patch('update')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.PasswordUpdated,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
+  @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   public async update(@Body() dto: UpdateUserDto, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.patch(
       `${ApplicationServiceURL.Users}/update`,
