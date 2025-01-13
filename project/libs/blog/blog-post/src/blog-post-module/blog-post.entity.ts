@@ -60,14 +60,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
     this.extraProperty = extraProperty ?? undefined;
-    //this.comments = [];
-    /*
-    const blogCommentFactory = new BlogCommentFactory();
-    for (const comment of comments) {
-      const blogCommentEntity = blogCommentFactory.create(comment);
-      this.comments.push(blogCommentEntity);
-    }
-*/
+
     const blogTagFactory = new BlogTagFactory();
     for (const tag of tags) {
       const blogTagEntity = blogTagFactory.create(tag);
