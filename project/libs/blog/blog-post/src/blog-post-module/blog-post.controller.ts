@@ -154,7 +154,7 @@ export class BlogPostController {
   @Post('like/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('blog like')
-  public async saveLike(
+  public async addLike(
     @Param('postId') postId: string,
     @Body() { userId }: UserIdDto
   ) {

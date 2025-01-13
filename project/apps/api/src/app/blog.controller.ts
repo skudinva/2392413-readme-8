@@ -149,4 +149,36 @@ export class BlogController {
 
     return data;
   }
+
+  @Post('/like/:postId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async addLike(
+    @Param('postId') postId: string,
+    @Body() dto: UserIdDto
+  ) {
+    const { data } = await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Blog}/like/${postId}`,
+      dto
+    );
+
+    return data;
+  }
+
+  @Post('/unlike/:postId')
+  @UseGuards(CheckAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async deleteLike(
+    @Param('postId') postId: string,
+    @Body() dto: UserIdDto
+  ) {
+    const { data } = await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Blog}/unlike/${postId}`,
+      dto
+    );
+
+    return data;
+  }
 }
