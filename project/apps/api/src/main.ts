@@ -11,6 +11,26 @@ async function bootstrap() {
     .setTitle('Readme app')
     .setDescription('Readme app API')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        description: `[just text field] Please enter token in following format: Bearer `,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+      },
+      'accessToken'
+    )
+    .addBearerAuth(
+      {
+        description: `[just text field] Please enter token in following format: Bearer `,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+      },
+      'refreshToken'
+    )
     .build();
 
   app.setGlobalPrefix(globalPrefix);
