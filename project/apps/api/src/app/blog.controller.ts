@@ -27,7 +27,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
-import { CreateCommentDto } from '@project/blog-comment';
+import {
+  BlogCommentRdo,
+  BlogCommentResponse,
+  BlogCommentWithPaginationRdo,
+  CreateCommentDto,
+} from '@project/blog-comment';
 import {
   BlogPostRdo,
   BlogPostResponse,
@@ -251,6 +256,15 @@ export class BlogController {
     return data;
   }
 
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: BlogPostResponse.PostFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
   @Get('/:id')
   public async getPost(@Param('id') id: string) {
     const { data } = await this.httpService.axiosRef.get(
@@ -265,6 +279,18 @@ export class BlogController {
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostResponse.Like,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.LikeAlreadyExists,
+  })
   public async addLike(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -282,6 +308,18 @@ export class BlogController {
   @ApiBearerAuth('accessToken')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostResponse.UnLike,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.LikeNotExists,
+  })
   public async deleteLike(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -294,6 +332,33 @@ export class BlogController {
     return data;
   }
 
+  @ApiResponse({
+    type: BlogCommentWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: BlogCommentResponse.CommentsFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentResponse.PostNotFound,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: true,
+    type: Number,
+    description: 'Limit comment count',
+  })
+  @ApiQuery({
+    name: 'sortDirection',
+    required: true,
+    enum: SortDirection,
+    description: 'Sort direction',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: true,
+    type: Number,
+    description: 'Page number',
+  })
   @Get('/comments/:postId')
   public async show(@Param('postId') postId: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(
@@ -307,6 +372,15 @@ export class BlogController {
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    type: BlogCommentRdo,
+    status: HttpStatus.CREATED,
+    description: BlogCommentResponse.CommentCreated,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentResponse.PostNotFound,
+  })
   public async create(
     @Param('postId') postId: string,
     @Body() dto: CreateCommentDto
@@ -323,6 +397,18 @@ export class BlogController {
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogCommentResponse.CommentDeleted,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentResponse.CommentNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogCommentResponse.NotAllowed,
+  })
   public async delete(@Param('commentId') commentId: string) {
     const { data } = await this.httpService.axiosRef.delete(
       `${ApplicationServiceURL.Comments}/${commentId}`

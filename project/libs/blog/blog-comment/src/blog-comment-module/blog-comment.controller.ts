@@ -62,6 +62,7 @@ export class BlogCommentController {
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
+
     description: BlogCommentResponse.CommentDeleted,
   })
   @ApiResponse({
