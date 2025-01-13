@@ -1,7 +1,9 @@
+export { BlogPostResponse } from './blog-post-module/blog-post.constant';
 export { BlogPostEntity } from './blog-post-module/blog-post.entity';
 export { BlogPostModule } from './blog-post-module/blog-post.module';
 export { BlogPostRepository } from './blog-post-module/blog-post.repository';
 export { BlogPostService } from './blog-post-module/blog-post.service';
+export { CreatePostFileDto } from './blog-post-module/dto/create-post-file.dto';
 export { CreatePostDto } from './blog-post-module/dto/create-post.dto';
 export { PostExtraPropertyDto } from './blog-post-module/dto/post-extra-property.dto';
 export { UpdatePostDto } from './blog-post-module/dto/update-post.dto';

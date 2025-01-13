@@ -19,10 +19,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
 import { CreateCommentDto } from '@project/blog-comment';
-import { CreatePostDto, UpdatePostDto, UserIdDto } from '@project/blog-post';
+import {
+  BlogPostRdo,
+  BlogPostResponse,
+  CreatePostFileDto,
+  UpdatePostDto,
+  UserIdDto,
+} from '@project/blog-post';
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
 import { File } from '@project/shared/core';
@@ -43,9 +49,19 @@ export class BlogController {
   @UseInterceptors(UseInterceptors)
   @UseInterceptors(InjectUserIdInterceptor)
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: BlogPostResponse.PostFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
   @Post('/')
   public async createPost(
-    @Body() dto: CreatePostDto,
+    @Body() dto: CreatePostFileDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
