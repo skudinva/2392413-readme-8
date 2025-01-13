@@ -62,11 +62,11 @@ export class BlogPostService {
   }
 
   public async deletePost(id: string): Promise<void> {
-    try {
-      await this.blogPostRepository.deleteById(id);
-    } catch {
-      throw new NotFoundException(`Post with ID ${id} not found`);
+    const post = await this.getPost(id);
+    if (!post) {
+      return;
     }
+    await this.blogPostRepository.deleteById(id);
   }
 
   public async getPost(id: string): Promise<BlogPostEntity> {
@@ -102,6 +102,7 @@ export class BlogPostService {
 
     const newPost = BlogPostFactory.createRepost(existsPost.toPOJO(), userId);
     await this.blogPostRepository.save(newPost);
+
     return newPost;
   }
 
