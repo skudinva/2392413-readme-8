@@ -19,6 +19,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
 import { CreatePostDto, UpdatePostDto, UserIdDto } from '@project/blog-post';
 import { createUrlForFile } from '@project/helpers';
@@ -33,6 +34,7 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('blog')
 @UseFilters(AxiosExceptionFilter)
+@ApiTags('Blog API')
 export class BlogController {
   constructor(private readonly httpService: HttpService) {}
 

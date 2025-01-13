@@ -15,9 +15,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserDto,
   LoginUserDto,
+  RegisterUserDto,
   UpdateUserDto,
 } from '@project/authentication';
 import { createUrlForFile } from '@project/helpers';
@@ -31,13 +33,15 @@ const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/static/default-avatar
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
+@ApiTags('User API')
 export class UsersController {
   constructor(private readonly httpService: HttpService) {}
 
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
   public async create(
-    @Body() dto: CreateUserDto,
+    @Body() dto: RegisterUserDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -49,7 +53,12 @@ export class UsersController {
     )
     avatar?: Express.Multer.File
   ) {
-    dto.avatar = DEFAULT_AVATAR_PATH;
+    const newUserDto: CreateUserDto = {
+      name: dto.name,
+      avatar: DEFAULT_AVATAR_PATH,
+      email: dto.email,
+      password: dto.password,
+    };
 
     if (avatar) {
       const formData = new FormData();
@@ -61,12 +70,15 @@ export class UsersController {
           headers: formData.getHeaders(),
         }
       );
-      dto.avatar = createUrlForFile(fileMetaData, ApplicationServiceURL.File);
+      newUserDto.avatar = createUrlForFile(
+        fileMetaData,
+        ApplicationServiceURL.File
+      );
     }
 
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/register`,
-      dto
+      newUserDto
     );
 
     return data;
