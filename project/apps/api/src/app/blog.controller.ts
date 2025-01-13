@@ -2,11 +2,15 @@ import { HttpService } from '@nestjs/axios';
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
+  HttpCode,
+  HttpStatus,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -15,7 +19,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreatePostDto } from '@project/blog-post';
+import { RequestWithTokenPayload } from '@project/authentication';
+import { CreatePostDto, UpdatePostDto, UserIdDto } from '@project/blog-post';
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
 import { File } from '@project/shared/core';
@@ -36,7 +41,7 @@ export class BlogController {
   @UseInterceptors(InjectUserIdInterceptor)
   @UseInterceptors(FileInterceptor('file'))
   @Post('/')
-  public async create(
+  public async createPost(
     @Body() dto: CreatePostDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -72,6 +77,57 @@ export class BlogController {
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/incPostsCount`,
       dto.authorId
+    );
+    return data;
+  }
+
+  @Post('/repost/:postId')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async createRepost(
+    @Param('postId') postId: string,
+    @Body() dto: UserIdDto
+  ) {
+    const { data } = await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Blog}/repost/${postId}`,
+      dto
+    );
+
+    await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Users}/incPostsCount`,
+      dto.userId
+    );
+
+    return data;
+  }
+
+  @Patch('/:id')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDto) {
+    const { data } = await this.httpService.axiosRef.patch(
+      `${ApplicationServiceURL.Blog}/${id}`,
+      dto
+    );
+
+    return data;
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CheckAuthGuard)
+  public async deletePost(
+    @Param('id') id: string,
+    @Req() req: RequestWithTokenPayload
+  ) {
+    const userId = req.user.sub;
+    const { data } = await this.httpService.axiosRef.delete(
+      `${ApplicationServiceURL.Blog}/${id}/${userId}`
+    );
+
+    await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Users}/decPostsCount`,
+      userId
     );
     return data;
   }

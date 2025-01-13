@@ -59,7 +59,7 @@ export class BlogCommentService {
 
   public async deleteComment(id: string, user: TokenPayload): Promise<void> {
     const existComment = await this.blogCommentRepository.findById(id);
-    if (user.sub !== existComment.id) {
+    if (user.sub !== existComment.userId) {
       throw new ConflictException('You are not allowed to delete this comment');
     }
 

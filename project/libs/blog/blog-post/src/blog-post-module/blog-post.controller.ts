@@ -105,11 +105,14 @@ export class BlogPostController {
     status: HttpStatus.CONFLICT,
     description: BlogPostResponse.AccessDeny,
   })
-  @Delete('/:id')
+  @Delete('/:postId/:userId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiTags('blog post')
-  public async destroy(@Param('id') id: string) {
-    await this.blogPostService.deletePost(id);
+  public async destroy(
+    @Param('postId') postId: string,
+    @Param('userId') userId: string
+  ) {
+    await this.blogPostService.deletePost(postId, userId);
   }
 
   @ApiResponse({

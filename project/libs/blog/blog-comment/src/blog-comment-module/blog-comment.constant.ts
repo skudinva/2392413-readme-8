@@ -15,5 +15,5 @@ export const BlogCommentResponse = {
   CommentDeleted: 'Successfully delete comment',
   PostNotFound: 'Post not found',
   CommentNotFound: 'Comment not found',
-  NotAllowed: 'You are not allowed to deletec this comment',
+  NotAllowed: 'You are not allowed to delete this comment',
 } as const;

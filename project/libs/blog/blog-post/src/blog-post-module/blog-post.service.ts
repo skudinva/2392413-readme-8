@@ -61,11 +61,16 @@ export class BlogPostService {
     return existPost;
   }
 
-  public async deletePost(id: string): Promise<void> {
+  public async deletePost(id: string, userId: string): Promise<void> {
     const post = await this.getPost(id);
     if (!post) {
       return;
     }
+
+    if (userId !== post.authorId) {
+      throw new ConflictException('You are not allowed to delete post');
+    }
+
     await this.blogPostRepository.deleteById(id);
   }
 
