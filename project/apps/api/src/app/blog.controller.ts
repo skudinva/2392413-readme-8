@@ -21,6 +21,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
+import { CreateCommentDto } from '@project/blog-comment';
 import { CreatePostDto, UpdatePostDto, UserIdDto } from '@project/blog-post';
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
@@ -179,6 +180,41 @@ export class BlogController {
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Blog}/unlike/${postId}`,
       dto
+    );
+
+    return data;
+  }
+
+  @Get('/comments/:postId')
+  public async show(@Param('postId') postId: string, @Req() req: Request) {
+    const { data } = await this.httpService.axiosRef.get(
+      `${ApplicationServiceURL.Comments}/${postId}?${url.parse(req.url).query}`
+    );
+
+    return data;
+  }
+
+  @Post('/comments/:postId')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async create(
+    @Param('postId') postId: string,
+    @Body() dto: CreateCommentDto
+  ) {
+    const { data } = await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Comments}/${postId}`,
+      dto
+    );
+
+    return data;
+  }
+
+  @Delete('/comments/:commentId')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  public async delete(@Param('commentId') commentId: string) {
+    const { data } = await this.httpService.axiosRef.delete(
+      `${ApplicationServiceURL.Comments}/${commentId}`
     );
 
     return data;
