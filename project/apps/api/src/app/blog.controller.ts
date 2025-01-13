@@ -19,19 +19,26 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RequestWithTokenPayload } from '@project/authentication';
 import { CreateCommentDto } from '@project/blog-comment';
 import {
   BlogPostRdo,
   BlogPostResponse,
+  BlogPostWithPaginationRdo,
   CreatePostFileDto,
   UpdatePostDto,
   UserIdDto,
 } from '@project/blog-post';
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
-import { File } from '@project/shared/core';
+import { File, SortDirection, SortType } from '@project/shared/core';
 import FormData from 'form-data';
 import 'multer';
 import * as url from 'node:url';
@@ -46,6 +53,7 @@ export class BlogController {
   constructor(private readonly httpService: HttpService) {}
 
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(UseInterceptors)
   @UseInterceptors(InjectUserIdInterceptor)
   @UseInterceptors(FileInterceptor('file'))
@@ -102,6 +110,7 @@ export class BlogController {
 
   @Post('/repost/:postId')
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
   @ApiResponse({
     type: BlogPostRdo,
@@ -144,7 +153,9 @@ export class BlogController {
     description: BlogPostResponse.AccessDeny,
   })
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
+  ///////////////////////////////
   public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDto) {
     const { data } = await this.httpService.axiosRef.patch(
       `${ApplicationServiceURL.Blog}/${id}`,
@@ -155,8 +166,25 @@ export class BlogController {
   }
 
   @Delete('/:id')
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostResponse.PostDeleted,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.AccessDeny,
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   public async deletePost(
     @Param('id') id: string,
     @Req() req: RequestWithTokenPayload
@@ -173,6 +201,47 @@ export class BlogController {
     return data;
   }
 
+  @ApiResponse({
+    type: BlogPostWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: BlogPostResponse.PostsFound,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: true,
+    type: Number,
+    description: 'Limit post count',
+  })
+  @ApiQuery({
+    name: 'tags',
+    required: false,
+    type: [String],
+    description: 'Tags',
+  })
+  @ApiQuery({
+    name: 'sortDirection',
+    required: true,
+    enum: SortDirection,
+    description: 'Sort direction',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: true,
+    enum: SortType,
+    description: 'Sort by',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: true,
+    type: Number,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search term',
+  })
   @Get('/')
   public async getPosts(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(
@@ -194,6 +263,7 @@ export class BlogController {
   @Post('/like/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
   public async addLike(
     @Param('postId') postId: string,
@@ -209,6 +279,7 @@ export class BlogController {
 
   @Post('/unlike/:postId')
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(InjectUserIdInterceptor)
   public async deleteLike(
@@ -234,6 +305,7 @@ export class BlogController {
 
   @Post('/comments/:postId')
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
   public async create(
     @Param('postId') postId: string,
@@ -249,6 +321,7 @@ export class BlogController {
 
   @Delete('/comments/:commentId')
   @UseGuards(CheckAuthGuard)
+  @ApiBearerAuth('accessToken')
   @UseInterceptors(InjectUserIdInterceptor)
   public async delete(@Param('commentId') commentId: string) {
     const { data } = await this.httpService.axiosRef.delete(

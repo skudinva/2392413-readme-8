@@ -8,4 +8,5 @@ export { CreatePostDto } from './blog-post-module/dto/create-post.dto';
 export { PostExtraPropertyDto } from './blog-post-module/dto/post-extra-property.dto';
 export { UpdatePostDto } from './blog-post-module/dto/update-post.dto';
 export { UserIdDto } from './blog-post-module/dto/user-id.dto';
+export { BlogPostWithPaginationRdo } from './blog-post-module/rdo/blog-post-with-pagination.rdo';
 export { BlogPostRdo } from './blog-post-module/rdo/blog-post.rdo';
