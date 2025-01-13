@@ -103,6 +103,11 @@ export class BlogController {
   @Post('/repost/:postId')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.CREATED,
+    description: BlogPostResponse.PostCreated,
+  })
   public async createRepost(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -121,6 +126,23 @@ export class BlogController {
   }
 
   @Patch('/:id')
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.ACCEPTED,
+    description: BlogPostResponse.PostUpdated,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostResponse.Unauthorized,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostResponse.PostNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: BlogPostResponse.AccessDeny,
+  })
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
   public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDto) {
