@@ -69,6 +69,10 @@ export class BlogController {
       `${ApplicationServiceURL.Blog}/`,
       dto
     );
+    await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Users}/incPostsCount`,
+      dto.authorId
+    );
     return data;
   }
 
