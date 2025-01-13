@@ -23,7 +23,7 @@ async function bootstrap() {
     .addBearerAuth(
       {
         description: `[just text field] Please enter token in following format: Bearer `,
-        name: 'Authorization2',
+        name: 'Authorization',
         bearerFormat: 'Bearer',
         scheme: 'Bearer',
         type: 'http',
