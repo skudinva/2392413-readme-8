@@ -81,7 +81,8 @@ export class UsersController {
 
     if (avatar) {
       const formData = new FormData();
-      formData.append('file', new Blob([avatar.buffer]), avatar.originalname);
+      formData.append('file', avatar.buffer, avatar.originalname);
+
       const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
         `${ApplicationServiceURL.File}/api/files/upload`,
         formData,
@@ -89,6 +90,7 @@ export class UsersController {
           headers: formData.getHeaders(),
         }
       );
+
       newUserDto.avatar = createUrlForFile(
         fileMetaData,
         ApplicationServiceURL.File

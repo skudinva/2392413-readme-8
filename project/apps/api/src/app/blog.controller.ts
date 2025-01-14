@@ -92,7 +92,7 @@ export class BlogController {
   ) {
     if (file) {
       const formData = new FormData();
-      formData.append('file', new Blob([file.buffer]), file.originalname);
+      formData.append('file', file.buffer, file.originalname);
       const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
         `${ApplicationServiceURL.File}/api/files/upload`,
         formData,
