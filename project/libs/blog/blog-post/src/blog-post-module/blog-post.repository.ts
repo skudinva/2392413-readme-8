@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { PostState, Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/blog-models';
 import { BasePostgresRepository } from '@project/data-access';
 import { PaginationResult, Post } from '@project/shared/core';
@@ -107,7 +107,7 @@ export class BlogPostRepository extends BasePostgresRepository<
     const take = query?.limit;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
-
+    const userId = query.userId ?? null;
     if (query?.tags) {
       where.tags = {
         some: {
@@ -116,6 +116,19 @@ export class BlogPostRepository extends BasePostgresRepository<
           },
         },
       };
+    }
+
+    if (query?.postType) {
+      where.postType = query.postType;
+    }
+
+    if (query?.authorId) {
+      where.authorId = query.authorId;
+      if (userId !== query.authorId) {
+        where.state = PostState.Published;
+      }
+    } else {
+      where.state = PostState.Published;
     }
 
     if (query?.sortBy) {

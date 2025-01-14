@@ -26,7 +26,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestWithTokenPayload } from '@project/authentication';
+import {
+  RequestWithTokenPayload,
+  RequestWithTokenPayloadUrl,
+} from '@project/authentication';
 import {
   BlogCommentRdo,
   BlogCommentResponse,
@@ -49,6 +52,7 @@ import 'multer';
 import * as url from 'node:url';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { CheckAuthForceGuard } from './guards/check-auth-force.guard';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('blog')
@@ -248,9 +252,15 @@ export class BlogController {
     description: 'Search term',
   })
   @Get('/')
-  public async getPosts(@Req() req: Request) {
+  @ApiBearerAuth('accessToken')
+  @UseGuards(CheckAuthForceGuard)
+  public async getPosts(@Req() req: RequestWithTokenPayloadUrl) {
+    const userId = req.user?.sub;
+    const requestUrl = userId ? `${req.url}&userId=${userId}` : req.url;
+    const query = url.parse(requestUrl).query;
+
     const { data } = await this.httpService.axiosRef.get(
-      `${ApplicationServiceURL.Blog}?${url.parse(req.url).query}`
+      `${ApplicationServiceURL.Blog}?${query}`
     );
 
     return data;
@@ -265,8 +275,15 @@ export class BlogController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostResponse.PostNotFound,
   })
+  @ApiBearerAuth('accessToken')
+  @UseGuards(CheckAuthForceGuard)
   @Get('/:id')
-  public async getPost(@Param('id') id: string) {
+  public async getPost(
+    @Param('id') id: string,
+    @Req() req: RequestWithTokenPayload
+  ) {
+    //const userId = req.user?.sub;
+
     const { data } = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Blog}/${id}`
     );

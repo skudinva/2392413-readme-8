@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PostType } from '@prisma/client';
 import { SortDirection, SortType } from '@project/shared/core';
 import { Transform } from 'class-transformer';
-import { IsArray, IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsIn,
+  IsMongoId,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import {
   DEFAULT_PAGE_COUNT,
   DEFAULT_POST_COUNT_LIMIT,
@@ -60,4 +68,35 @@ export class BlogPostQuery {
     required: false,
   })
   public search?: string;
+
+  @IsString()
+  @IsMongoId()
+  @IsOptional()
+  @ApiProperty({
+    required: false,
+    description: 'Author id of the post',
+    example: '677cd8d75ff92067f1de5911',
+  })
+  authorId!: string;
+
+  @ApiProperty({
+    description: 'Post type',
+    example: 'Video',
+    enum: PostType,
+    enumName: 'PostType',
+    required: false,
+  })
+  @IsIn(Object.values(PostType))
+  @IsOptional()
+  postType!: PostType;
+
+  @IsString()
+  @IsMongoId()
+  @IsOptional()
+  @ApiProperty({
+    required: false,
+    description: 'id of login user',
+    example: '677cd8d75ff92067f1de5911',
+  })
+  userId?: string;
 }
