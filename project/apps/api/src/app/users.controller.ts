@@ -33,14 +33,14 @@ import {
   UserRdo,
 } from '@project/authentication';
 import { createUrlForFile } from '@project/helpers';
-import { File } from '@project/shared/core';
+import { File, SERVE_ROOT } from '@project/shared/core';
 import FormData from 'form-data';
 import 'multer';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
-const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/static/default-avatar.jpg`;
+const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/${SERVE_ROOT}/default-avatar.jpg`;
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)

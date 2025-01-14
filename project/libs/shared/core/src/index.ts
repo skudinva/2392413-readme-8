@@ -1,4 +1,5 @@
 export { Entity } from './lib/base/entity';
+export { SERVE_ROOT } from './lib/const';
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { JwtToken } from './lib/interfaces/jwt-token.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';

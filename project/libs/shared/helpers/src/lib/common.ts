@@ -1,4 +1,4 @@
-import { File } from '@project/shared/core';
+import { File, SERVE_ROOT } from '@project/shared/core';
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 export type DateTimeUnit = 's' | 'h' | 'd' | 'm' | 'y';
@@ -68,5 +68,5 @@ export function parseTime(time: string): TimeAndUnit {
 
 export function createUrlForFile(fileMetaData: File, host: string): string {
   const subDirectory = fileMetaData.subDirectory.replace('\\', '/');
-  return `${host}/static/${subDirectory}/${fileMetaData.hashName}`;
+  return `${host}/${SERVE_ROOT}/${subDirectory}/${fileMetaData.hashName}`;
 }
