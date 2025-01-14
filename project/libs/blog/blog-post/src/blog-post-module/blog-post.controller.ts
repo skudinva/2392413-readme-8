@@ -29,7 +29,7 @@ export class BlogPostController {
     private readonly blogLikeService: BlogLikeService
   ) {}
 
-  @Get('/:id')
+  @Get('/:id/:userId')
   @ApiResponse({
     type: BlogPostRdo,
     status: HttpStatus.OK,
@@ -40,8 +40,8 @@ export class BlogPostController {
     description: BlogPostResponse.PostNotFound,
   })
   @ApiTags('blog post')
-  public async show(@Param('id') id: string) {
-    const post = await this.blogPostService.getPost(id);
+  public async show(@Param('id') id: string, @Param('userId') userId: string) {
+    const post = await this.blogPostService.getPost(id, userId);
     return fillDto(BlogPostRdo, post.toPOJO());
   }
 

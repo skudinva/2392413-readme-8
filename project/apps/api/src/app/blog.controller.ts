@@ -282,10 +282,9 @@ export class BlogController {
     @Param('id') id: string,
     @Req() req: RequestWithTokenPayload
   ) {
-    //const userId = req.user?.sub;
-
+    const userId = req.user?.sub;
     const { data } = await this.httpService.axiosRef.get(
-      `${ApplicationServiceURL.Blog}/${id}`
+      `${ApplicationServiceURL.Blog}/${id}/${userId}`
     );
 
     return data;

@@ -23,7 +23,7 @@ export class BlogCommentService {
     postId: string,
     query: BlogCommentQuery
   ): Promise<PaginationResult<ReturnType<BlogCommentEntity['toPOJO']>>> {
-    const post = await this.blogPostService.getPost(postId);
+    const post = await this.blogPostService.getPost(postId, null);
     const commentsWithPagination =
       await this.blogCommentRepository.findByPostId(post.id, query);
 

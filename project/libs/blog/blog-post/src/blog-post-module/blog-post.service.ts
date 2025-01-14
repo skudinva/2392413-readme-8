@@ -3,8 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PostState } from '@prisma/client';
 import { BlogTagService } from '@project/blog-tag';
 import { PaginationResult } from '@project/shared/core';
+import { BlogPostResponse } from './blog-post.constant';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
@@ -34,7 +36,7 @@ export class BlogPostService {
     id: string,
     dto: UpdatePostDto
   ): Promise<BlogPostEntity> {
-    const existPost = await this.getPost(id);
+    const existPost = await this.getPost(id, dto.authorId);
 
     for (const [key] of Object.entries(existPost.extraProperty)) {
       existPost.extraProperty[key] =
@@ -62,7 +64,7 @@ export class BlogPostService {
   }
 
   public async deletePost(id: string, userId: string): Promise<void> {
-    const post = await this.getPost(id);
+    const post = await this.getPost(id, null);
     if (!post) {
       return;
     }
@@ -74,11 +76,23 @@ export class BlogPostService {
     await this.blogPostRepository.deleteById(id);
   }
 
-  public async getPost(id: string): Promise<BlogPostEntity> {
+  public async getPost(
+    id: string,
+    userId: string | null | undefined
+  ): Promise<BlogPostEntity> {
     const existPost = await this.blogPostRepository.findById(id);
     if (!existPost) {
-      throw new NotFoundException(`Post with id ${id} not found.`);
+      throw new NotFoundException(BlogPostResponse.PostNotFound);
     }
+
+    if (
+      userId !== null &&
+      userId !== existPost.authorId &&
+      existPost.state === PostState.Draft
+    ) {
+      throw new NotFoundException(BlogPostResponse.PostNotFound);
+    }
+
     return existPost;
   }
 
@@ -92,7 +106,7 @@ export class BlogPostService {
     postId: string,
     userId: string
   ): Promise<BlogPostEntity> {
-    const existsPost = await this.getPost(postId);
+    const existsPost = await this.getPost(postId, userId);
 
     const existRepost = await this.blogPostRepository.findRepost(
       postId,
@@ -115,7 +129,7 @@ export class BlogPostService {
     postId: string,
     diffValue: number
   ): Promise<void> {
-    const existPost = await this.getPost(postId);
+    const existPost = await this.getPost(postId, null);
     existPost.commentsCount += diffValue;
     await this.blogPostRepository.update(existPost);
   }
@@ -124,7 +138,7 @@ export class BlogPostService {
     postId: string,
     diffValue: number
   ): Promise<void> {
-    const existPost = await this.getPost(postId);
+    const existPost = await this.getPost(postId, null);
     existPost.likesCount += diffValue;
     await this.blogPostRepository.update(existPost);
   }
