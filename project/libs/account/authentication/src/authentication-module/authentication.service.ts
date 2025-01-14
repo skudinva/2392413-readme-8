@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { NotifyService } from '@project/account-notify';
 import { BlogUserEntity, BlogUserRepository } from '@project/blog-user';
 import { jwtConfig } from '@project/config';
 import { createJWTPayload } from '@project/helpers';
@@ -34,7 +35,8 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof jwtConfig>,
-    private readonly refreshTokenService: RefreshTokenService
+    private readonly refreshTokenService: RefreshTokenService,
+    private readonly notifyService: NotifyService
   ) {}
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
@@ -59,8 +61,8 @@ export class AuthenticationService {
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
 
-    this.blogUserRepository.save(userEntity);
-
+    await this.blogUserRepository.save(userEntity);
+    await this.notifyService.registerSubscriber({ email, name });
     return userEntity;
   }
 
