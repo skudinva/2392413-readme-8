@@ -44,6 +44,7 @@ import {
   CreatePostDto,
   CreatePostFileDto,
   UpdatePostDto,
+  UpdatePostFileDto,
   UserIdDto,
 } from '@project/blog-post';
 import { UserInfoRdo } from '@project/blog-user';
@@ -86,6 +87,19 @@ export class BlogController {
     });
   }
 
+  private async uploadFile(file: Express.Multer.File) {
+    const formData = new FormData();
+    formData.append('file', file.buffer, file.originalname);
+    const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
+      `${ApplicationServiceURL.File}/api/files/upload`,
+      formData,
+      {
+        headers: formData.getHeaders(),
+      }
+    );
+    return createUrlForFile(fileMetaData, ApplicationServiceURL.File);
+  }
+
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
   @UseInterceptors(UseInterceptors)
@@ -115,27 +129,14 @@ export class BlogController {
     )
     file?: Express.Multer.File
   ) {
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file.buffer, file.originalname);
-      const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
-        `${ApplicationServiceURL.File}/api/files/upload`,
-        formData,
-        {
-          headers: formData.getHeaders(),
-        }
-      );
-
-      dto.post.extraProperty.photo = createUrlForFile(
-        fileMetaData,
-        ApplicationServiceURL.File
-      );
-    }
-
     const postDto = plainToInstance(
       CreatePostDto,
       JSON.parse(String(dto.post))
     );
+
+    if (file) {
+      postDto.extraProperty.photo = await this.uploadFile(file);
+    }
 
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Blog}/`,
@@ -195,12 +196,36 @@ export class BlogController {
   })
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
+  @UseInterceptors(UseInterceptors)
   @UseInterceptors(InjectUserIdInterceptor)
-  ///////////////////////////////
-  public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  public async updatePost(
+    @Param('id') id: string,
+    @Body() dto: UpdatePostFileDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+        ],
+        fileIsRequired: false,
+      })
+    )
+    file?: Express.Multer.File
+  ) {
+    const postDto = plainToInstance(
+      UpdatePostDto,
+      JSON.parse(String(dto.post))
+    );
+
+    if (file) {
+      postDto.extraProperty.photo = await this.uploadFile(file);
+    }
+
     const { data } = await this.httpService.axiosRef.patch(
       `${ApplicationServiceURL.Blog}/${id}`,
-      dto
+      postDto
     );
 
     return data;
