@@ -14,6 +14,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlogLikeService } from '@project/blog-like';
 import { BlogNotifyService } from '@project/blog-notify';
 import { fillDto } from '@project/helpers';
+import { SortDirection, SortType } from '@project/shared/core';
 import { BlogPostResponse } from './blog-post.constant';
 import { BlogPostQuery } from './blog-post.query';
 import { BlogPostService } from './blog-post.service';
@@ -189,9 +190,13 @@ export class BlogPostController {
 
   @Post('sendNewPostNotify')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiTags('blog post')
   public async sendNewPostNotify(@Body() dto: UserIdDto) {
     const query = new BlogPostQuery();
     query.authorId = dto.userId;
+    query.sortBy = SortType.DATE;
+    query.sortDirection = SortDirection.Desc;
+    query.limit = 10;
     const { entities } = await this.blogPostService.getPosts(query);
 
     this.notifyService.sendNewPostNotify(
