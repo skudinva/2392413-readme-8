@@ -36,7 +36,7 @@ import { createUrlForFile } from '@project/helpers';
 import { File, SERVE_ROOT } from '@project/shared/core';
 import FormData from 'form-data';
 import 'multer';
-import { ApplicationServiceURL } from './app.config';
+import { ApiSection, ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
@@ -44,7 +44,7 @@ const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/${SERVE_ROOT}/default
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
-@ApiTags('User API')
+@ApiTags(ApiSection.User)
 export class UsersController {
   constructor(private readonly httpService: HttpService) {}
 
