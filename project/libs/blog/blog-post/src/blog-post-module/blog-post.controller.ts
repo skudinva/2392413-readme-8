@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlogLikeService } from '@project/blog-like';
+import { BlogNotifyService } from '@project/blog-notify';
 import { fillDto } from '@project/helpers';
 import { BlogPostResponse } from './blog-post.constant';
 import { BlogPostQuery } from './blog-post.query';
@@ -26,7 +27,8 @@ import { BlogPostRdo } from './rdo/blog-post.rdo';
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService,
-    private readonly blogLikeService: BlogLikeService
+    private readonly blogLikeService: BlogLikeService,
+    private readonly notifyService: BlogNotifyService
   ) {}
 
   @Get('/:id/:userId')
@@ -183,5 +185,18 @@ export class BlogPostController {
   ) {
     await this.blogLikeService.unlike({ postId, userId });
     await this.blogPostService.updateCommentCount(postId, -1);
+  }
+
+  @Post('sendNewPostNotify')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async sendNewPostNotify(@Body() dto: UserIdDto) {
+    const query = new BlogPostQuery();
+    query.authorId = dto.userId;
+    const { entities } = await this.blogPostService.getPosts(query);
+
+    this.notifyService.sendNewPostNotify(
+      entities.map((post) => post.toPOJO()),
+      dto.userId
+    );
   }
 }

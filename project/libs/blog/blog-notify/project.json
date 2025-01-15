@@ -1,0 +1,9 @@
+{
+  "name": "blog-notify",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/blog/blog-notify/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project blog-notify --web",
+  "targets": {}
+}
