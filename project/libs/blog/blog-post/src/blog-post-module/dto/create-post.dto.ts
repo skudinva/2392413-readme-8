@@ -4,7 +4,6 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
-  IsBoolean,
   IsIn,
   IsMongoId,
   IsOptional,
@@ -33,31 +32,6 @@ export class CreatePostDto {
   })
   authorId!: string;
 
-  @IsBoolean()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Repost flag',
-    example: 'false',
-  })
-  isRepost!: boolean;
-
-  @IsString()
-  @IsOptional()
-  @IsMongoId()
-  @ApiProperty({
-    description: 'Source author Id',
-    example: '999aef3b7eadb76365f3c2cb',
-  })
-  originAuthorId?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Source post Id',
-    example: '0a7cbc9e-9754-4187-ad0f-5b99d4b0814b',
-  })
-  originPostId?: string;
-
   @IsOptional()
   @IsString({ each: true })
   @ArrayMaxSize(8)
@@ -66,6 +40,7 @@ export class CreatePostDto {
   @ApiProperty({
     description: 'List of tags',
     example: ['#sometag1'],
+    required: false,
   })
   tags?: string[];
 

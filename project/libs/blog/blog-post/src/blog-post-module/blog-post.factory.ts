@@ -20,15 +20,15 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     newPost.id = undefined;
     newPost.postType = dto.postType;
     newPost.authorId = dto.authorId;
-    newPost.isRepost = dto.isRepost;
+    newPost.isRepost = false;
     newPost.state = PostState.Published;
     newPost.createdAt = dayjs().toDate();
     newPost.publicDate = dayjs().toDate();
     newPost.likesCount = 0;
     newPost.commentsCount = 0;
     newPost.extraProperty = dto.extraProperty;
-    newPost.originAuthorId = dto.originAuthorId;
-    newPost.originPostId = dto.originPostId;
+    newPost.originAuthorId = null;
+    newPost.originPostId = null;
     newPost.tags = tags;
 
     return newPost;

@@ -98,7 +98,7 @@ export class UsersController {
     }
 
     const { data } = await this.httpService.axiosRef.post(
-      `${ApplicationServiceURL.Users}/register`,
+      `${ApplicationServiceURL.Auth}/register`,
       newUserDto
     );
 
@@ -117,7 +117,7 @@ export class UsersController {
   })
   public async login(@Body() loginUserDto: LoginUserDto) {
     const { data } = await this.httpService.axiosRef.post(
-      `${ApplicationServiceURL.Users}/login`,
+      `${ApplicationServiceURL.Auth}/login`,
       loginUserDto
     );
     return data;
@@ -140,7 +140,7 @@ export class UsersController {
   @ApiBearerAuth('accessToken')
   public async update(@Body() dto: UpdateUserDto, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.patch(
-      `${ApplicationServiceURL.Users}/update`,
+      `${ApplicationServiceURL.Auth}/update`,
       dto,
       {
         headers: {
@@ -170,7 +170,7 @@ export class UsersController {
   })
   public async show(@Param('id') id: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(
-      `${ApplicationServiceURL.Users}/${id}`,
+      `${ApplicationServiceURL.Auth}/${id}`,
       {
         headers: {
           Authorization: req.headers['authorization'],
@@ -189,7 +189,7 @@ export class UsersController {
   @ApiBearerAuth('refreshToken')
   public async refreshToken(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.post(
-      `${ApplicationServiceURL.Users}/refresh`,
+      `${ApplicationServiceURL.Auth}/refresh`,
       null,
       {
         headers: {
@@ -210,7 +210,7 @@ export class UsersController {
   @Post('check')
   public async checkToken(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.post(
-      `${ApplicationServiceURL.Users}/check`,
+      `${ApplicationServiceURL.Auth}/check`,
       null,
       {
         headers: {

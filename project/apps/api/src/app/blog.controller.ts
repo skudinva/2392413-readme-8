@@ -40,6 +40,7 @@ import {
   BlogPostRdo,
   BlogPostResponse,
   BlogPostWithPaginationRdo,
+  CreatePostDto,
   CreatePostFileDto,
   UpdatePostDto,
   UserIdDto,
@@ -47,6 +48,7 @@ import {
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
 import { File, SortDirection, SortType } from '@project/shared/core';
+import { plainToInstance } from 'class-transformer';
 import FormData from 'form-data';
 import 'multer';
 import * as url from 'node:url';
@@ -69,7 +71,7 @@ export class BlogController {
   @ApiConsumes('multipart/form-data')
   @ApiResponse({
     type: BlogPostRdo,
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     description: BlogPostResponse.PostFound,
   })
   @ApiResponse({
@@ -100,19 +102,26 @@ export class BlogController {
           headers: formData.getHeaders(),
         }
       );
-      dto.extraProperty.photo = createUrlForFile(
+
+      dto.post.extraProperty.photo = createUrlForFile(
         fileMetaData,
         ApplicationServiceURL.File
       );
     }
 
+    const postDto = plainToInstance(
+      CreatePostDto,
+      JSON.parse(String(dto.post))
+    );
+
     const { data } = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Blog}/`,
-      dto
+      postDto
     );
+
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/incPostsCount`,
-      dto.authorId
+      { userId: postDto.authorId }
     );
     return data;
   }

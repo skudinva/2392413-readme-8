@@ -3,7 +3,7 @@ import { ApplicationServiceURL } from '../app.config';
 
 export async function checkAuth(axiosRef: AxiosInstance, request: Request) {
   const { data } = await axiosRef.post(
-    `${ApplicationServiceURL.Users}/check`,
+    `${ApplicationServiceURL.Auth}/check`,
     {},
     {
       headers: {
