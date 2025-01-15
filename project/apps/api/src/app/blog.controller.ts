@@ -60,7 +60,6 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('blog')
 @UseFilters(AxiosExceptionFilter)
-@ApiTags('Blog API')
 export class BlogController {
   constructor(
     private readonly httpService: HttpService,
@@ -83,6 +82,7 @@ export class BlogController {
     description: BlogPostResponse.PostNotFound,
   })
   @Post('/')
+  @ApiTags('Post API')
   public async createPost(
     @Body() dto: CreatePostFileDto,
     @UploadedFile(
@@ -126,6 +126,7 @@ export class BlogController {
     status: HttpStatus.CREATED,
     description: BlogPostResponse.PostCreated,
   })
+  @ApiTags('Post API')
   public async createRepost(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -167,6 +168,7 @@ export class BlogController {
   @UseInterceptors(InjectUserIdInterceptor)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
+  @ApiTags('Post API')
   public async updatePost(
     @Param('id') id: string,
     @Body() dto: UpdatePostFileDto,
@@ -218,6 +220,7 @@ export class BlogController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
+  @ApiTags('Post API')
   public async deletePost(
     @Param('id') id: string,
     @Req() req: RequestWithTokenPayload
@@ -286,6 +289,7 @@ export class BlogController {
   @Get('/')
   @ApiBearerAuth('accessToken')
   @UseGuards(CheckAuthForceGuard)
+  @ApiTags('Post API')
   public async getPosts(@Req() req: RequestWithTokenPayloadUrl) {
     const userId = req.user?.sub;
     const requestUrl = userId ? `${req.url}&userId=${userId}` : req.url;
@@ -311,6 +315,7 @@ export class BlogController {
   @ApiBearerAuth('accessToken')
   @UseGuards(CheckAuthForceGuard)
   @Get('/:id')
+  @ApiTags('Post API')
   public async getPost(
     @Param('id') id: string,
     @Req() req: RequestWithTokenPayload
@@ -341,6 +346,7 @@ export class BlogController {
     status: HttpStatus.CONFLICT,
     description: BlogPostResponse.LikeAlreadyExists,
   })
+  @ApiTags('Like API')
   public async addLike(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -370,6 +376,7 @@ export class BlogController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostResponse.LikeNotExists,
   })
+  @ApiTags('Like API')
   public async deleteLike(
     @Param('postId') postId: string,
     @Body() dto: UserIdDto
@@ -405,6 +412,7 @@ export class BlogController {
     example: 1,
   })
   @Get('/comments/:postId')
+  @ApiTags('Comment API')
   public async show(@Param('postId') postId: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Comments}/${postId}?${url.parse(req.url).query}`
@@ -426,6 +434,7 @@ export class BlogController {
     status: HttpStatus.NOT_FOUND,
     description: BlogCommentResponse.PostNotFound,
   })
+  @ApiTags('Comment API')
   public async create(
     @Param('postId') postId: string,
     @Body() dto: CreateCommentDto
@@ -454,6 +463,7 @@ export class BlogController {
     status: HttpStatus.CONFLICT,
     description: BlogCommentResponse.NotAllowed,
   })
+  @ApiTags('Comment API')
   public async delete(@Param('commentId') commentId: string) {
     const { data } = await this.httpService.axiosRef.delete(
       `${ApplicationServiceURL.Comments}/${commentId}`
@@ -467,6 +477,7 @@ export class BlogController {
   @UseInterceptors(InjectUserIdInterceptor)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth('accessToken')
+  @ApiTags('Post API')
   public async sendNewPostNotify(@Body() dto: UserIdDto) {
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Blog}/sendNewPostNotify`,
