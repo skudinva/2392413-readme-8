@@ -32,11 +32,11 @@ import {
   UpdateUserDto,
   UserRdo,
 } from '@project/authentication';
-import { createUrlForFile } from '@project/helpers';
-import { File, SERVE_ROOT } from '@project/shared/core';
-import FormData from 'form-data';
+import { fillDto } from '@project/helpers';
+import { SERVE_ROOT } from '@project/shared/core';
 import 'multer';
 import { ApiSection, ApplicationServiceURL } from './app.config';
+import { AppService } from './app.service';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
@@ -46,7 +46,10 @@ const DEFAULT_AVATAR_PATH = `${ApplicationServiceURL.File}/${SERVE_ROOT}/default
 @UseFilters(AxiosExceptionFilter)
 @ApiTags(ApiSection.User)
 export class UsersController {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly appService: AppService
+  ) {}
 
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar'))
@@ -72,29 +75,15 @@ export class UsersController {
     )
     avatar?: Express.Multer.File
   ) {
-    const newUserDto: CreateUserDto = {
+    const newUserDto = fillDto(CreateUserDto, {
       name: dto.name,
       avatar: DEFAULT_AVATAR_PATH,
       email: dto.email,
       password: dto.password,
-    };
+    });
 
     if (avatar) {
-      const formData = new FormData();
-      formData.append('file', avatar.buffer, avatar.originalname);
-
-      const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
-        `${ApplicationServiceURL.File}/api/files/upload`,
-        formData,
-        {
-          headers: formData.getHeaders(),
-        }
-      );
-
-      newUserDto.avatar = createUrlForFile(
-        fileMetaData,
-        ApplicationServiceURL.File
-      );
+      newUserDto.avatar = await this.appService.uploadFile(avatar);
     }
 
     const { data } = await this.httpService.axiosRef.post(
