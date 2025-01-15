@@ -5,9 +5,9 @@ import { Tag } from './tag.interface';
 export interface Post {
   id?: string;
   postType: PostType;
-  authorId: string;
+  userId: string;
   isRepost: boolean;
-  originAuthorId?: string | null;
+  originUserId?: string | null;
   originPostId?: string | null;
   tags: Tag[];
   state: PostState;

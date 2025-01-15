@@ -46,21 +46,21 @@ model PostExtraProperty {
 }
 
 model Post {
-  id             String             @id @default(uuid())
-  postType       PostType           @map("post_type")
-  authorId       String             @map("author_id")
-  isRepost       Boolean            @map("is_repost")
-  originAuthorId String?            @map("origin_author_id")
-  originPostId   String?            @map("origin_post_id")
-  tags           Tag[]
-  state          PostState
-  createdAt      DateTime           @default(now()) @map("created_at")
-  publicDate     DateTime           @map("public_date")
-  likesCount     Int                @default(0) @map("likes_count")
-  commentsCount  Int                @default(0) @map("comments_count")
-  extraProperty  PostExtraProperty?
-  comments       Comment[]
-  likes          Like[]
+  id            String             @id @default(uuid())
+  postType      PostType           @map("post_type")
+  userId        String             @map("user_id")
+  isRepost      Boolean            @map("is_repost")
+  originUserId  String?            @map("origin_user_id")
+  originPostId  String?            @map("origin_post_id")
+  tags          Tag[]
+  state         PostState
+  createdAt     DateTime           @default(now()) @map("created_at")
+  publicDate    DateTime           @map("public_date")
+  likesCount    Int                @default(0) @map("likes_count")
+  commentsCount Int                @default(0) @map("comments_count")
+  extraProperty PostExtraProperty?
+  comments      Comment[]
+  likes         Like[]
 
   @@map("posts")
 }

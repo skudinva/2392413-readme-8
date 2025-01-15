@@ -36,7 +36,7 @@ export class BlogPostService {
     id: string,
     dto: UpdatePostDto
   ): Promise<BlogPostEntity> {
-    const existPost = await this.getPost(id, dto.authorId);
+    const existPost = await this.getPost(id, dto.userId);
 
     for (const [key] of Object.entries(existPost.extraProperty)) {
       existPost.extraProperty[key] =
@@ -69,7 +69,7 @@ export class BlogPostService {
       return;
     }
 
-    if (userId !== post.authorId) {
+    if (userId !== post.userId) {
       throw new ConflictException('You are not allowed to delete post');
     }
 
@@ -87,7 +87,7 @@ export class BlogPostService {
 
     if (
       userId !== null &&
-      userId !== existPost.authorId &&
+      userId !== existPost.userId &&
       existPost.state === PostState.Draft
     ) {
       throw new NotFoundException(BlogPostResponse.PostNotFound);

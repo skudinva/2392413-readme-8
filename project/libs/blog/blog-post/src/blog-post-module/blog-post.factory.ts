@@ -19,7 +19,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     const newPost = new BlogPostEntity();
     newPost.id = undefined;
     newPost.postType = dto.postType;
-    newPost.authorId = dto.authorId;
+    newPost.userId = dto.userId;
     newPost.isRepost = false;
     newPost.state = PostState.Published;
     newPost.createdAt = dayjs().toDate();
@@ -27,7 +27,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     newPost.likesCount = 0;
     newPost.commentsCount = 0;
     newPost.extraProperty = dto.extraProperty;
-    newPost.originAuthorId = null;
+    newPost.originUserId = null;
     newPost.originPostId = null;
     newPost.tags = tags;
 
@@ -45,9 +45,9 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
 
     newPost.id = undefined;
     newPost.isRepost = true;
-    newPost.authorId = userId;
+    newPost.userId = userId;
     newPost.originPostId = originalPost.id;
-    newPost.originAuthorId = originalPost.authorId;
+    newPost.originUserId = originalPost.userId;
     newPost.createdAt = dayjs().toDate();
     newPost.publicDate = dayjs().toDate();
     newPost.likesCount = 0;

@@ -77,7 +77,7 @@ export class BlogPostQuery {
     description: 'Author id of the post',
     example: '677cd8d75ff92067f1de5911',
   })
-  authorId!: string;
+  postUserId: string;
 
   @ApiProperty({
     description: 'Post type',

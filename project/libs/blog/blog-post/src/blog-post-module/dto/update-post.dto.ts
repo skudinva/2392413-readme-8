@@ -34,7 +34,7 @@ export class UpdatePostDto {
     description: 'Author id of the post',
     example: '677cd8d75ff92067f1de5911',
   })
-  authorId?: string;
+  userId?: string;
 
   @IsBoolean()
   @IsOptional()
@@ -51,7 +51,7 @@ export class UpdatePostDto {
     description: 'Source author Id',
     example: '999aef3b7eadb76365f3c2cb',
   })
-  originAuthorId?: string;
+  originUserId?: string;
 
   @IsString()
   @IsOptional()

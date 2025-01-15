@@ -193,7 +193,7 @@ export class BlogPostController {
   @ApiTags('blog post')
   public async sendNewPostNotify(@Body() dto: UserIdDto) {
     const query = new BlogPostQuery();
-    query.authorId = dto.userId;
+    query.userId = dto.userId;
     query.sortBy = SortType.DATE;
     query.sortDirection = SortDirection.Desc;
     const { entities } = await this.blogPostService.getPosts(query);

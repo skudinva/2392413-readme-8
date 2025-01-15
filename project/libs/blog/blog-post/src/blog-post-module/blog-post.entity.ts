@@ -9,9 +9,9 @@ import {
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public postType!: PostType;
-  public authorId!: string;
+  public userId!: string;
   public isRepost!: boolean;
-  public originAuthorId?: string;
+  public originUserId?: string;
   public originPostId?: string;
   public tags!: BlogTagEntity[];
   public state!: PostState;
@@ -33,9 +33,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     const {
       id,
       postType,
-      authorId,
+      userId,
       isRepost,
-      originAuthorId,
+      originUserId,
       originPostId,
       tags,
       state,
@@ -49,9 +49,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
 
     this.id = id ?? undefined;
     this.postType = postType;
-    this.authorId = authorId;
+    this.userId = userId;
     this.isRepost = isRepost;
-    this.originAuthorId = originAuthorId ?? undefined;
+    this.originUserId = originUserId ?? undefined;
     this.originPostId = originPostId ?? undefined;
     this.tags = [];
     this.state = state;
@@ -72,9 +72,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     return {
       id: this.id,
       postType: this.postType,
-      authorId: this.authorId,
+      userId: this.userId,
       isRepost: this.isRepost,
-      originAuthorId: this.originAuthorId ?? undefined,
+      originUserId: this.originUserId ?? undefined,
       originPostId: this.originPostId ?? undefined,
       state: this.state,
       createdAt: this.createdAt,

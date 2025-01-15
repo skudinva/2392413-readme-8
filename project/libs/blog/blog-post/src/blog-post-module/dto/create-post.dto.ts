@@ -30,7 +30,7 @@ export class CreatePostDto {
     description: 'Author id of the post',
     example: '677cd8d75ff92067f1de5911',
   })
-  authorId!: string;
+  userId!: string;
 
   @IsOptional()
   @IsString({ each: true })

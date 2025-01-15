@@ -23,7 +23,7 @@ export class BlogPostRdo {
     description: 'Author Id',
     example: '999aef3b7eadb76365f3c2cb',
   })
-  authorId!: string;
+  userId!: string;
 
   @Expose()
   @ApiProperty({
@@ -37,7 +37,7 @@ export class BlogPostRdo {
     description: 'Source author Id',
     example: '999aef3b7eadb76365f3c2cb',
   })
-  originAuthorId?: string;
+  originUserId?: string;
 
   @Expose()
   @ApiProperty({

@@ -121,7 +121,7 @@ export class BlogController {
 
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/incPostsCount`,
-      { userId: postDto.authorId }
+      { userId: postDto.userId }
     );
     return data;
   }

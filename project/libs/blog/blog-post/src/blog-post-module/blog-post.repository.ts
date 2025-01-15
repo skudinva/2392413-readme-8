@@ -52,7 +52,7 @@ export class BlogPostRepository extends BasePostgresRepository<
       data: {
         postType: pojoPost.postType,
         isRepost: pojoPost.isRepost,
-        originAuthorId: pojoPost.originAuthorId ?? undefined,
+        originUserId: pojoPost.originUserId ?? undefined,
         originPostId: pojoPost.originPostId ?? undefined,
         state: pojoPost.state,
         publicDate: pojoPost.publicDate,
@@ -122,9 +122,9 @@ export class BlogPostRepository extends BasePostgresRepository<
       where.postType = query.postType;
     }
 
-    if (query?.authorId) {
-      where.authorId = query.authorId;
-      if (userId !== query.authorId) {
+    if (query?.postUserId) {
+      where.userId = query.postUserId;
+      if (userId !== query.postUserId) {
         where.state = PostState.Published;
       }
     } else {
@@ -160,12 +160,12 @@ export class BlogPostRepository extends BasePostgresRepository<
 
   public async findRepost(
     originPostId: string,
-    authorId: string
+    userId: string
   ): Promise<BlogPostEntity | null> {
     const post = await this.client.post.findFirst({
       where: {
         originPostId,
-        authorId,
+        userId,
       },
       include: {
         extraProperty: true,
