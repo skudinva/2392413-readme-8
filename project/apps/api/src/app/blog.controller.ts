@@ -432,4 +432,16 @@ export class BlogController {
 
     return data;
   }
+
+  @Post('/sendNewPostNotify')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth('accessToken')
+  public async sendNewPostNotify(@Body() dto: UserIdDto) {
+    await this.httpService.axiosRef.post(
+      `${ApplicationServiceURL.Blog}/sendNewPostNotify`,
+      dto
+    );
+  }
 }
