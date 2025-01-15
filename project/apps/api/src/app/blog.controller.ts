@@ -47,15 +47,13 @@ import {
   UpdatePostFileDto,
   UserIdDto,
 } from '@project/blog-post';
-import { UserInfoRdo } from '@project/blog-user';
-import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
-import { File, SortDirection, SortType } from '@project/shared/core';
+import { SortDirection, SortType } from '@project/shared/core';
 import { plainToInstance } from 'class-transformer';
-import FormData from 'form-data';
 import 'multer';
 import * as url from 'node:url';
 import { ApplicationServiceURL } from './app.config';
+import { AppService } from './app.service';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthForceGuard } from './guards/check-auth-force.guard';
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -64,41 +62,10 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 @UseFilters(AxiosExceptionFilter)
 @ApiTags('Blog API')
 export class BlogController {
-  constructor(private readonly httpService: HttpService) {}
-
-  private async appendUserInfo(posts: BlogPostRdo[]): Promise<void> {
-    const uniqueUserIds = new Set<string>();
-    const usersInfo = new Map<string, UserInfoRdo>();
-
-    posts.forEach((post) => {
-      uniqueUserIds.add(post.userId);
-    });
-
-    for (const userId of uniqueUserIds) {
-      const { data } = await this.httpService.axiosRef.get<UserInfoRdo>(
-        `${ApplicationServiceURL.Users}/${userId}`
-      );
-
-      usersInfo.set(data.id, data);
-    }
-
-    posts.forEach((post) => {
-      post['userInfo'] = usersInfo.get(post.userId);
-    });
-  }
-
-  private async uploadFile(file: Express.Multer.File) {
-    const formData = new FormData();
-    formData.append('file', file.buffer, file.originalname);
-    const { data: fileMetaData } = await this.httpService.axiosRef.post<File>(
-      `${ApplicationServiceURL.File}/api/files/upload`,
-      formData,
-      {
-        headers: formData.getHeaders(),
-      }
-    );
-    return createUrlForFile(fileMetaData, ApplicationServiceURL.File);
-  }
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly appService: AppService
+  ) {}
 
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
@@ -135,7 +102,7 @@ export class BlogController {
     );
 
     if (file) {
-      postDto.extraProperty.photo = await this.uploadFile(file);
+      postDto.extraProperty.photo = await this.appService.uploadFile(file);
     }
 
     const { data } = await this.httpService.axiosRef.post(
@@ -220,7 +187,7 @@ export class BlogController {
     );
 
     if (file) {
-      postDto.extraProperty.photo = await this.uploadFile(file);
+      postDto.extraProperty.photo = await this.appService.uploadFile(file);
     }
 
     const { data } = await this.httpService.axiosRef.patch(
@@ -328,7 +295,7 @@ export class BlogController {
       await this.httpService.axiosRef.get<BlogPostWithPaginationRdo>(
         `${ApplicationServiceURL.Blog}?${query}`
       );
-    await this.appendUserInfo(data.entities);
+    await this.appService.appendUserInfo(data.entities);
     return data;
   }
 
@@ -352,7 +319,7 @@ export class BlogController {
     const { data } = await this.httpService.axiosRef.get<BlogPostRdo>(
       `${ApplicationServiceURL.Blog}/${id}/${userId}`
     );
-    await this.appendUserInfo([data]);
+    await this.appService.appendUserInfo([data]);
 
     return data;
   }
