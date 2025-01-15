@@ -26,6 +26,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { PostType } from '@prisma/client';
 import {
   RequestWithTokenPayload,
   RequestWithTokenPayloadUrl,
@@ -247,12 +248,6 @@ export class BlogController {
     description: BlogPostResponse.PostsFound,
   })
   @ApiQuery({
-    name: 'limit',
-    required: true,
-    type: Number,
-    description: 'Limit post count',
-  })
-  @ApiQuery({
     name: 'tags',
     required: false,
     type: [String],
@@ -274,6 +269,7 @@ export class BlogController {
     name: 'page',
     required: true,
     type: Number,
+    example: 1,
     description: 'Page number',
   })
   @ApiQuery({
@@ -281,6 +277,19 @@ export class BlogController {
     required: false,
     type: String,
     description: 'Search term',
+  })
+  @ApiQuery({
+    name: 'postUserId',
+    required: false,
+    type: String,
+    example: '677cd8d75ff92067f1de5911',
+    description: 'Author id of the post',
+  })
+  @ApiQuery({
+    name: 'postType',
+    required: false,
+    enum: PostType,
+    description: 'Post type',
   })
   @Get('/')
   @ApiBearerAuth('accessToken')
@@ -391,12 +400,6 @@ export class BlogController {
     description: BlogCommentResponse.PostNotFound,
   })
   @ApiQuery({
-    name: 'limit',
-    required: true,
-    type: Number,
-    description: 'Limit comment count',
-  })
-  @ApiQuery({
     name: 'sortDirection',
     required: true,
     enum: SortDirection,
@@ -407,6 +410,7 @@ export class BlogController {
     required: true,
     type: Number,
     description: 'Page number',
+    example: 1,
   })
   @Get('/comments/:postId')
   public async show(@Param('postId') postId: string, @Req() req: Request) {

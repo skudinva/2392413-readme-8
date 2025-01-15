@@ -6,7 +6,6 @@ import {
   IsArray,
   IsIn,
   IsMongoId,
-  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -18,13 +17,6 @@ import {
 } from './blog-post.constant';
 
 export class BlogPostQuery {
-  @Transform(({ value }) => parseInt(value, 10) || DEFAULT_POST_COUNT_LIMIT)
-  @IsNumber()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Limit post count',
-    example: 10,
-  })
   public limit: number = DEFAULT_POST_COUNT_LIMIT;
 
   @IsArray()
