@@ -196,7 +196,6 @@ export class BlogPostController {
     query.authorId = dto.userId;
     query.sortBy = SortType.DATE;
     query.sortDirection = SortDirection.Desc;
-    query.limit = 10;
     const { entities } = await this.blogPostService.getPosts(query);
 
     this.notifyService.sendNewPostNotify(
