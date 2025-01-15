@@ -131,6 +131,15 @@ export class BlogPostRepository extends BasePostgresRepository<
       where.state = PostState.Published;
     }
 
+    if (query?.search) {
+      where.extraProperty = {
+        name: {
+          contains: query.search,
+          mode: 'insensitive',
+        },
+      };
+    }
+
     if (query?.sortBy) {
       orderBy[query.sortBy] = query.sortDirection;
     }
