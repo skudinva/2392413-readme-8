@@ -45,6 +45,7 @@ import {
   UpdatePostDto,
   UserIdDto,
 } from '@project/blog-post';
+import { UserInfoRdo } from '@project/blog-user';
 import { createUrlForFile } from '@project/helpers';
 import { InjectUserIdInterceptor } from '@project/interceptors';
 import { File, SortDirection, SortType } from '@project/shared/core';
@@ -62,6 +63,27 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 @ApiTags('Blog API')
 export class BlogController {
   constructor(private readonly httpService: HttpService) {}
+
+  private async appendUserInfo(posts: BlogPostRdo[]): Promise<void> {
+    const uniqueUserIds = new Set<string>();
+    const usersInfo = new Map<string, UserInfoRdo>();
+
+    posts.forEach((post) => {
+      uniqueUserIds.add(post.userId);
+    });
+
+    for (const userId of uniqueUserIds) {
+      const { data } = await this.httpService.axiosRef.get<UserInfoRdo>(
+        `${ApplicationServiceURL.Users}/${userId}`
+      );
+
+      usersInfo.set(data.id, data);
+    }
+
+    posts.forEach((post) => {
+      post['userInfo'] = usersInfo.get(post.userId);
+    });
+  }
 
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth('accessToken')
@@ -268,10 +290,11 @@ export class BlogController {
     const requestUrl = userId ? `${req.url}&userId=${userId}` : req.url;
     const query = url.parse(requestUrl).query;
 
-    const { data } = await this.httpService.axiosRef.get(
-      `${ApplicationServiceURL.Blog}?${query}`
-    );
-
+    const { data } =
+      await this.httpService.axiosRef.get<BlogPostWithPaginationRdo>(
+        `${ApplicationServiceURL.Blog}?${query}`
+      );
+    await this.appendUserInfo(data.entities);
     return data;
   }
 
@@ -292,9 +315,10 @@ export class BlogController {
     @Req() req: RequestWithTokenPayload
   ) {
     const userId = req.user?.sub;
-    const { data } = await this.httpService.axiosRef.get(
+    const { data } = await this.httpService.axiosRef.get<BlogPostRdo>(
       `${ApplicationServiceURL.Blog}/${id}/${userId}`
     );
+    await this.appendUserInfo([data]);
 
     return data;
   }
