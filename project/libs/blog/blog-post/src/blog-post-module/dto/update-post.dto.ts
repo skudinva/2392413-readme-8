@@ -4,10 +4,8 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
-  IsBoolean,
   IsIn,
   IsISO8601,
-  IsMongoId,
   IsOptional,
   IsString,
   Length,
@@ -27,39 +25,7 @@ export class UpdatePostDto {
   })
   postType?: PostType;
 
-  @IsString()
-  @IsMongoId()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Author id of the post',
-    example: '677cd8d75ff92067f1de5911',
-  })
   userId?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Repost flag',
-    example: 'false',
-  })
-  isRepost?: boolean;
-
-  @IsString()
-  @IsOptional()
-  @IsMongoId()
-  @ApiProperty({
-    description: 'Source author Id',
-    example: '999aef3b7eadb76365f3c2cb',
-  })
-  originUserId?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty({
-    description: 'Source post Id',
-    example: '0a7cbc9e-9754-4187-ad0f-5b99d4b0814b',
-  })
-  originPostId?: string;
 
   @IsOptional()
   @IsString({ each: true })

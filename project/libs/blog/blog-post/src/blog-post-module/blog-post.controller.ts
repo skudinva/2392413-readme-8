@@ -120,7 +120,7 @@ export class BlogPostController {
 
   @ApiResponse({
     type: BlogPostRdo,
-    status: HttpStatus.ACCEPTED,
+    status: HttpStatus.OK,
     description: BlogPostResponse.PostUpdated,
   })
   @ApiResponse({

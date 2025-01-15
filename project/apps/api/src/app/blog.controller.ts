@@ -147,7 +147,7 @@ export class BlogController {
   @Patch('/:id')
   @ApiResponse({
     type: BlogPostRdo,
-    status: HttpStatus.ACCEPTED,
+    status: HttpStatus.OK,
     description: BlogPostResponse.PostUpdated,
   })
   @ApiResponse({
