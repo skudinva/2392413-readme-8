@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FieldValidate } from '@project/shared/core';
 import {
   IsOptional,
   IsString,
@@ -40,7 +41,7 @@ export class PostExtraPropertyDto {
     description: 'Text publication',
     example: 'Example text publication',
   })
-  @Length(100, 1024)
+  @Length(FieldValidate.MinPostTextLength, FieldValidate.MaxPostTextLength)
   text?: string;
 
   @IsString()
@@ -49,7 +50,10 @@ export class PostExtraPropertyDto {
     description: 'Announce publication',
     example: 'Example announce publication',
   })
-  @Length(50, 255)
+  @Length(
+    FieldValidate.MinPostAnnounceLength,
+    FieldValidate.MaxPostAnnounceLength
+  )
   announce?: string;
 
   @IsString()
@@ -58,7 +62,7 @@ export class PostExtraPropertyDto {
     description: 'Name of publication',
     example: 'Example name publication',
   })
-  @Length(20, 50)
+  @Length(FieldValidate.MinPostNameLength, FieldValidate.MaxPostNameLength)
   name?: string;
 
   @IsString()
@@ -67,7 +71,10 @@ export class PostExtraPropertyDto {
     description: 'Quote text publication',
     example: 'Example quote text publication',
   })
-  @Length(20, 300)
+  @Length(
+    FieldValidate.MinPostQuoteTextLength,
+    FieldValidate.MaxPostQuoteTextLength
+  )
   quoteText?: string;
 
   @ApiProperty({
@@ -76,6 +83,6 @@ export class PostExtraPropertyDto {
   })
   @IsString()
   @IsOptional()
-  @Length(3, 50)
+  @Length(FieldValidate.MinUserNameLength, FieldValidate.MaxUserNameLength)
   public quoteAuthor: string;
 }

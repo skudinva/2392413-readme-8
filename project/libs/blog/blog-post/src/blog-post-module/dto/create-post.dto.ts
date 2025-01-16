@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PostState, PostType } from '@prisma/client';
+import { FieldValidate } from '@project/shared/core';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -34,9 +35,11 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsString({ each: true })
-  @ArrayMaxSize(8)
+  @ArrayMaxSize(FieldValidate.MaxTagCount)
   @IsArray()
-  @Length(3, 10, { each: true })
+  @Length(FieldValidate.MinTagLength, FieldValidate.MaxTagLength, {
+    each: true,
+  })
   @ApiProperty({
     description: 'List of tags',
     example: ['#sometag1'],

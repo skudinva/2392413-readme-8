@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FieldValidate } from '@project/shared/core';
 import { IsString, Length } from 'class-validator';
 
 export class CreateTagDto {
   @ApiProperty({
     description: 'Tag for the post',
-    example: 'sometag',
+    example: '#sometag',
   })
   @IsString()
-  @Length(3, 10)
+  @Length(FieldValidate.MinTagLength, FieldValidate.MaxTagLength)
   public title!: string;
 }
