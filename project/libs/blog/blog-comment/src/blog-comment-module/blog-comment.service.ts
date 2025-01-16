@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BlogPostService } from '@project/blog-post';
-import { PaginationResult, TokenPayload } from '@project/shared/core';
+import { PaginationResult } from '@project/shared/core';
 import { BlogCommentEntity } from './blog-comment.entity';
 import { BlogCommentFactory } from './blog-comment.factory';
 import { BlogCommentQuery } from './blog-comment.query';
@@ -46,7 +46,7 @@ export class BlogCommentService {
       dto.userId
     );
 
-    if (!existsComment) {
+    if (existsComment) {
       throw new ConflictException('User already comment this post');
     }
 
@@ -57,9 +57,9 @@ export class BlogCommentService {
     return newComment;
   }
 
-  public async deleteComment(id: string, user: TokenPayload): Promise<void> {
+  public async deleteComment(id: string, userId: string): Promise<void> {
     const existComment = await this.blogCommentRepository.findById(id);
-    if (user.sub !== existComment.userId) {
+    if (userId !== existComment.userId) {
       throw new ConflictException('You are not allowed to delete this comment');
     }
 

@@ -7,10 +7,8 @@ import {
   Param,
   Post,
   Query,
-  Req,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RequestWithTokenPayload } from '@project/authentication';
 import { fillDto } from '@project/helpers';
 import { BlogCommentResponse } from './blog-comment.constant';
 import { BlogCommentQuery } from './blog-comment.query';
@@ -73,11 +71,11 @@ export class BlogCommentController {
     status: HttpStatus.CONFLICT,
     description: BlogCommentResponse.NotAllowed,
   })
-  @Delete('/:commentId')
+  @Delete('/:commentId/:userId')
   public async delete(
     @Param('commentId') commentId: string,
-    @Req() { user }: RequestWithTokenPayload
+    @Param('userId') userId: string
   ) {
-    await this.blogCommentService.deleteComment(commentId, user);
+    await this.blogCommentService.deleteComment(commentId, userId);
   }
 }

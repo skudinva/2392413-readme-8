@@ -464,9 +464,13 @@ export class BlogController {
     description: BlogCommentResponse.NotAllowed,
   })
   @ApiTags(ApiSection.Comment)
-  public async delete(@Param('commentId') commentId: string) {
+  public async delete(
+    @Param('commentId') commentId: string,
+    @Req() req: RequestWithTokenPayload
+  ) {
+    const userId = req.user.sub;
     const { data } = await this.httpService.axiosRef.delete(
-      `${ApplicationServiceURL.Comments}/${commentId}`
+      `${ApplicationServiceURL.Comments}/${commentId}/${userId}`
     );
 
     return data;
