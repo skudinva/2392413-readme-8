@@ -22,6 +22,16 @@
         }
       }
     },
+    "buildImage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp -R libs/blog/models/prisma apps/blog/src/assets/",
+          "nx run blog:build",
+          "docker build --file apps/blog/Dockerfile --tag readme.blog:latest ."
+        ]
+      }
+    },
     "db:lint": {
       "executor": "nx:run-commands",
       "options": {
