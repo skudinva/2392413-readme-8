@@ -32,8 +32,8 @@ import {
   UpdateUserDto,
   UserRdo,
 } from '@project/authentication';
-import { fillDto } from '@project/helpers';
 import { SERVE_ROOT } from '@project/shared/core';
+import { plainToInstance } from 'class-transformer';
 import 'multer';
 import { ApiSection, ApplicationServiceURL } from './app.config';
 import { AppService } from './app.service';
@@ -75,7 +75,7 @@ export class UsersController {
     )
     avatar?: Express.Multer.File
   ) {
-    const newUserDto = fillDto(CreateUserDto, {
+    const newUserDto = plainToInstance(CreateUserDto, {
       name: dto.name,
       avatar: DEFAULT_AVATAR_PATH,
       email: dto.email,
