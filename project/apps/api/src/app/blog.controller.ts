@@ -138,7 +138,7 @@ export class BlogController {
 
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/incPostsCount`,
-      dto.userId
+      { userId: dto.userId }
     );
 
     return data;
@@ -232,7 +232,7 @@ export class BlogController {
 
     await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Users}/decPostsCount`,
-      userId
+      { userId }
     );
     return data;
   }
