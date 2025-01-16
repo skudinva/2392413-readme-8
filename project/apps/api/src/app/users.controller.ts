@@ -32,7 +32,7 @@ import {
   UpdateUserDto,
   UserRdo,
 } from '@project/authentication';
-import { SERVE_ROOT } from '@project/shared/core';
+import { FieldValidate, SERVE_ROOT } from '@project/shared/core';
 import { plainToInstance } from 'class-transformer';
 import 'multer';
 import { ApiSection, ApplicationServiceURL } from './app.config';
@@ -67,8 +67,12 @@ export class UsersController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 500000 }),
-          new FileTypeValidator({ fileType: '.(jpg|jpeg|png)' }),
+          new MaxFileSizeValidator({
+            maxSize: FieldValidate.MaxFileSizeForAvatar,
+          }),
+          new FileTypeValidator({
+            fileType: FieldValidate.AllowedImageFileType,
+          }),
         ],
         fileIsRequired: false,
       })

@@ -48,7 +48,7 @@ import {
   UserIdDto,
 } from '@project/blog-post';
 import { InjectUserIdInterceptor } from '@project/interceptors';
-import { SortDirection, SortType } from '@project/shared/core';
+import { FieldValidate, SortDirection, SortType } from '@project/shared/core';
 import { plainToInstance } from 'class-transformer';
 import 'multer';
 import * as url from 'node:url';
@@ -88,8 +88,12 @@ export class BlogController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 1000000 }),
-          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+          new MaxFileSizeValidator({
+            maxSize: FieldValidate.MaxFileSizeForPost,
+          }),
+          new FileTypeValidator({
+            fileType: FieldValidate.AllowedImageFileType,
+          }),
         ],
         fileIsRequired: false,
       })
@@ -175,8 +179,12 @@ export class BlogController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 1000000 }),
-          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+          new MaxFileSizeValidator({
+            maxSize: FieldValidate.MaxFileSizeForPost,
+          }),
+          new FileTypeValidator({
+            fileType: FieldValidate.AllowedImageFileType,
+          }),
         ],
         fileIsRequired: false,
       })

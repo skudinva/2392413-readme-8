@@ -17,4 +17,7 @@ export const FieldValidate = {
   MaxPostNameLength: 50,
   MinPostQuoteTextLength: 20,
   MaxPostQuoteTextLength: 300,
+  MaxFileSizeForPost: 1000000,
+  MaxFileSizeForAvatar: 500000,
+  AllowedImageFileType: '.(jpg|jpeg|png)',
 } as const;
