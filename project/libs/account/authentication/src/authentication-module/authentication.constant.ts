@@ -13,6 +13,7 @@ export const AuthenticationResponseMessage = {
 } as const;
 
 export const AuthenticationValidateMessage = {
+  NameNotValid: 'The name is not valid',
   EmailNotValid: 'The email is not valid',
   DateBirthNotValid: 'The user date birth is not valid',
   PasswordNotValid: 'The password is not valid',

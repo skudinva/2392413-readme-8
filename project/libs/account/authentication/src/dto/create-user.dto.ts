@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, Length } from 'class-validator';
+import { AuthenticationValidateMessage } from '../authentication-module/authentication.constant';
 import { LoginUserDto } from './login-user.dto';
 
 export class CreateUserDto extends LoginUserDto {
@@ -8,6 +9,7 @@ export class CreateUserDto extends LoginUserDto {
     example: 'Keks',
   })
   @IsString()
+  @Length(3, 50, { message: AuthenticationValidateMessage.NameNotValid })
   public name: string;
 
   @ApiProperty({
