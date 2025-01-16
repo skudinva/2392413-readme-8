@@ -94,7 +94,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
           }
         : null,
       tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
-      //comments: this.comments.map((commentEntity) => commentEntity.toPOJO()),
     };
   }
 }

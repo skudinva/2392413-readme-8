@@ -38,10 +38,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     originalPost: Post,
     userId: string
   ): BlogPostEntity {
-    const newPost = new BlogPostEntity();
-    for (const [key, value] of Object.entries(originalPost)) {
-      newPost[key] = value;
-    }
+    const newPost = new BlogPostEntity(originalPost);
 
     newPost.id = undefined;
     newPost.isRepost = true;
