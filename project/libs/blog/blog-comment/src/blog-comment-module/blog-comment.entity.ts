@@ -20,7 +20,7 @@ export class BlogCommentEntity
       return;
     }
 
-    this.id = comment.id ?? '';
+    this.id = comment.id ?? undefined;
     this.createdAt = comment.createdAt;
     this.updatedAt = comment.updatedAt;
     this.message = comment.message;

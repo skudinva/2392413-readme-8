@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { SERVE_ROOT } from '@project/shared/core';
 import { FileUploaderController } from './file-uploader.controller';
 import { FileUploaderFactory } from './file-uploader.factory';
 import { FileUploaderRepository } from './file-uploader.repository';
 import { FileUploaderService } from './file-uploader.service';
 import { FileModel, FileSchema } from './file.model';
-
-const SERVE_ROOT = '/static';
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ const SERVE_ROOT = '/static';
         return [
           {
             rootPath,
-            serveRoot: SERVE_ROOT,
+            serveRoot: `/${SERVE_ROOT}`,
             serveStaticOptions: {
               fallthrough: true,
               etag: true,

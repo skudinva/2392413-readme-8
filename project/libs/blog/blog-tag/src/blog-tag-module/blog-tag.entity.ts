@@ -13,7 +13,7 @@ export class BlogTagEntity extends Entity implements StorableEntity<Tag> {
     }
     const { id, title } = tag;
 
-    this.id = id ?? '';
+    this.id = id ?? undefined;
     this.title = title;
   }
 

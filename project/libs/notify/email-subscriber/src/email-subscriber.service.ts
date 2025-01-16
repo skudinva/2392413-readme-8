@@ -24,4 +24,8 @@ export class EmailSubscriberService {
 
     return emailSubscriber;
   }
+
+  public async getAllSubscribers() {
+    return await this.emailSubscriberRepository.getAll();
+  }
 }

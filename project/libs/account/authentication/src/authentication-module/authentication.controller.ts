@@ -2,18 +2,19 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { NotifyService } from '@project/account-notify';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillDto } from '@project/helpers';
 import { MongoIdValidationPipe } from '@project/pipes';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { LoginUserDto } from '../dto/login-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
@@ -27,10 +28,7 @@ import { RequestWithUser } from './request-with-user.interface';
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
-  constructor(
-    private readonly authService: AuthenticationService,
-    private readonly notifyService: NotifyService
-  ) {}
+  constructor(private readonly authService: AuthenticationService) {}
 
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -43,10 +41,30 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
-    const { email, name } = newUser;
-    await this.notifyService.registerSubscriber({ email, name });
-
     return newUser.toPOJO();
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.PasswordUpdated,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Patch('update')
+  public async changePassword(
+    @Body() dto: UpdateUserDto,
+    @Req() { user: payload }: RequestWithTokenPayload
+  ) {
+    const user = await this.authService.updatePassword(dto, payload?.sub);
+
+    return fillDto(UserRdo, user.toPOJO());
   }
 
   @ApiResponse({
@@ -60,6 +78,7 @@ export class AuthenticationController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiBody({ type: LoginUserDto })
   public async login(@Req() { user }: RequestWithUser) {
     const userToken = await this.authService.createUserToken(user);
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
@@ -74,7 +93,12 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: AuthenticationResponseMessage.UserNotFound,
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.Unauthorized,
+  })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get(':id')
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const existUser = await this.authService.getUser(id);
@@ -83,17 +107,22 @@ export class AuthenticationController {
 
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     description: 'Get a new access/refresh tokens',
   })
+  @ApiBearerAuth('refreshToken')
   public async refreshToken(@Req() { user }: RequestWithUser) {
     return this.authService.createUserToken(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('check')
+  @ApiBearerAuth('accessToken')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.UserFound,
+  })
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
   }

@@ -48,7 +48,7 @@ export class BlogTagRepository extends BasePostgresRepository<
     }
 
     const newTag = this.tagFactory.create({ title });
-    this.save(newTag);
+    await this.save(newTag);
     return newTag;
   }
   public async findOrCreateByTitles(

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTagDto } from '../dto/create-tag.dto';
 import { BlogTagEntity } from './blog-tag.entity';
 import { BlogTagRepository } from './blog-tag.repository';
+import { CreateTagDto } from './dto/create-tag.dto';
 
 @Injectable()
 export class BlogTagService {

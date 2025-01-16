@@ -1,5 +1,4 @@
 import { PostState, PostType } from '@prisma/client';
-import { BlogCommentEntity, BlogCommentFactory } from '@project/blog-comment';
 import { BlogTagEntity, BlogTagFactory } from '@project/blog-tag';
 import {
   Entity,
@@ -10,9 +9,9 @@ import {
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public postType!: PostType;
-  public authorId!: string;
+  public userId!: string;
   public isRepost!: boolean;
-  public originAuthorId?: string;
+  public originUserId?: string;
   public originPostId?: string;
   public tags!: BlogTagEntity[];
   public state!: PostState;
@@ -21,7 +20,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public likesCount!: number;
   public commentsCount!: number;
   public extraProperty?: PostExtraProperty;
-  public comments!: BlogCommentEntity[];
+  //public comments!: BlogCommentEntity[];
 
   constructor(post?: Post) {
     super();
@@ -34,9 +33,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     const {
       id,
       postType,
-      authorId,
+      userId,
       isRepost,
-      originAuthorId,
+      originUserId,
       originPostId,
       tags,
       state,
@@ -45,15 +44,15 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       likesCount,
       commentsCount,
       extraProperty,
-      comments,
+      //comments,
     } = post;
 
-    this.id = id ?? '';
+    this.id = id ?? undefined;
     this.postType = postType;
-    this.authorId = authorId;
+    this.userId = userId;
     this.isRepost = isRepost;
-    this.originAuthorId = originAuthorId ?? '';
-    this.originPostId = originPostId ?? '';
+    this.originUserId = originUserId ?? undefined;
+    this.originPostId = originPostId ?? undefined;
     this.tags = [];
     this.state = state;
     this.createdAt = createdAt;
@@ -61,13 +60,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.likesCount = likesCount;
     this.commentsCount = commentsCount;
     this.extraProperty = extraProperty ?? undefined;
-    this.comments = [];
-
-    const blogCommentFactory = new BlogCommentFactory();
-    for (const comment of comments) {
-      const blogCommentEntity = blogCommentFactory.create(comment);
-      this.comments.push(blogCommentEntity);
-    }
 
     const blogTagFactory = new BlogTagFactory();
     for (const tag of tags) {
@@ -80,18 +72,28 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     return {
       id: this.id,
       postType: this.postType,
-      authorId: this.authorId,
+      userId: this.userId,
       isRepost: this.isRepost,
-      originAuthorId: this.originAuthorId ?? '',
-      originPostId: this.originPostId ?? '',
+      originUserId: this.originUserId ?? undefined,
+      originPostId: this.originPostId ?? undefined,
       state: this.state,
       createdAt: this.createdAt,
       publicDate: this.publicDate,
       likesCount: this.likesCount,
       commentsCount: this.commentsCount,
-      extraProperty: this.extraProperty ?? null,
+      extraProperty: this.extraProperty
+        ? {
+            url: this.extraProperty.url,
+            describe: this.extraProperty.describe,
+            photo: this.extraProperty.photo,
+            text: this.extraProperty.text,
+            announce: this.extraProperty.announce,
+            name: this.extraProperty.name,
+            quoteText: this.extraProperty.quoteText,
+            quoteAuthor: this.extraProperty.quoteAuthor,
+          }
+        : null,
       tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
-      comments: this.comments.map((commentEntity) => commentEntity.toPOJO()),
     };
   }
 }

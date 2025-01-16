@@ -10,6 +10,26 @@ async function bootstrap() {
     .setTitle('The «Account» service')
     .setDescription('Account service API')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        description: `[just text field] Please enter token in following format: Bearer `,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+      },
+      'accessToken'
+    )
+    .addBearerAuth(
+      {
+        description: `[just text field] Please enter token in following format: Bearer `,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+      },
+      'refreshToken'
+    )
     .build();
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

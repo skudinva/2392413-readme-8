@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { FieldValidate } from '@project/shared/core';
+import { IsEmail, IsString, Length } from 'class-validator';
 import { AuthenticationValidateMessage } from '../authentication-module/authentication.constant';
 
 export class LoginUserDto {
   @ApiProperty({
     description: 'User unique address',
-    example: 'user@user.ru',
+    example: 'user2@notfound.local',
   })
   @IsEmail({}, { message: AuthenticationValidateMessage.EmailNotValid })
   public email: string;
@@ -15,5 +16,8 @@ export class LoginUserDto {
     example: '123456',
   })
   @IsString()
+  @Length(FieldValidate.MinPasswordLength, FieldValidate.MaxPasswordLength, {
+    message: AuthenticationValidateMessage.PasswordNotValid,
+  })
   public password: string;
 }

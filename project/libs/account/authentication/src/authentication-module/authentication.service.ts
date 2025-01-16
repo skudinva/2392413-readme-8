@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { NotifyService } from '@project/account-notify';
 import { BlogUserEntity, BlogUserRepository } from '@project/blog-user';
 import { jwtConfig } from '@project/config';
 import { createJWTPayload } from '@project/helpers';
@@ -17,11 +18,13 @@ import { AuthUser, Token, User } from '@project/shared/core';
 import dayjs from 'dayjs';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { RefreshTokenService } from '../refresh-token-module/refresh-token.service';
 import {
   AUTH_USER_EXISTS,
   AUTH_USER_NOT_FOUND,
   AUTH_USER_PASSWORD_WRONG,
+  AuthenticationResponseMessage,
 } from './authentication.constant';
 
 @Injectable()
@@ -32,7 +35,8 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof jwtConfig>,
-    private readonly refreshTokenService: RefreshTokenService
+    private readonly refreshTokenService: RefreshTokenService,
+    private readonly notifyService: NotifyService
   ) {}
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
@@ -44,6 +48,9 @@ export class AuthenticationService {
       avatar,
       registerDate: dayjs().toDate(),
       passwordHash: '',
+      subscriptions: [],
+      subscribersCount: 0,
+      postsCount: 0,
     };
 
     const existUser = await this.blogUserRepository.findByEmail(email);
@@ -54,8 +61,8 @@ export class AuthenticationService {
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
 
-    this.blogUserRepository.save(userEntity);
-
+    await this.blogUserRepository.save(userEntity);
+    await this.notifyService.registerSubscriber({ email, name });
     return userEntity;
   }
 
@@ -120,5 +127,22 @@ export class AuthenticationService {
     }
 
     return existUser;
+  }
+
+  public async updatePassword(dto: UpdateUserDto, id?: string) {
+    if (!id) {
+      throw new UnauthorizedException(
+        AuthenticationResponseMessage.Unauthorized
+      );
+    }
+
+    const existUser = await this.blogUserRepository.findById(id);
+    if (!existUser) {
+      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+    }
+
+    const userEntity = await existUser.setPassword(dto.password);
+    this.blogUserRepository.updatePassword(id, userEntity.passwordHash);
+    return userEntity;
   }
 }

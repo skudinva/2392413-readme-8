@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
   "postType": "Video",
-  "authorId": "8986a240-2be7-543b-abce-f3ee6a9e304e",
+  "userId": "8986a240-2be7-543b-abce-f3ee6a9e304e",
   "isRepost": false,
   "state": "Published",
   "tags": [],

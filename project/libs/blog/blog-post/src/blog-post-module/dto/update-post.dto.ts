@@ -1,12 +1,12 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PostState, PostType } from '@prisma/client';
+import { FieldValidate } from '@project/shared/core';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
-  IsBoolean,
   IsIn,
   IsISO8601,
-  IsMongoId,
   IsOptional,
   IsString,
   Length,
@@ -18,39 +18,42 @@ import { IsValidPostCombination } from './valid-post-property';
 export class UpdatePostDto {
   @IsIn(Object.values(PostType))
   @IsOptional()
+  @ApiProperty({
+    description: 'Post type',
+    example: 'Video',
+    enum: PostType,
+    enumName: 'PostType',
+  })
   postType?: PostType;
 
-  @IsString()
-  @IsMongoId()
-  @IsOptional()
-  authorId?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  isRepost?: boolean;
-
-  @IsString()
-  @IsOptional()
-  @IsMongoId()
-  originAuthorId?: string;
-
-  @IsString()
-  @IsOptional()
-  originPostId?: string;
+  userId?: string;
 
   @IsOptional()
   @IsString({ each: true })
-  @ArrayMaxSize(8)
+  @ArrayMaxSize(FieldValidate.MaxTagCount)
   @IsArray()
-  @Length(3, 10, { each: true })
+  @Length(FieldValidate.MinTagLength, FieldValidate.MaxTagLength, {
+    each: true,
+  })
+  @ApiProperty({
+    description: 'List of tags',
+    example: ['#sometag1'],
+  })
   tags?: string[];
 
   @IsIn(Object.values(PostState))
   @IsOptional()
+  @ApiProperty({
+    description: 'Post state',
+    example: 'Published',
+    enum: PostState,
+    enumName: 'PostState',
+  })
   state?: PostState;
 
   @IsISO8601()
   @IsOptional()
+  @ApiProperty({ description: 'Date of publication' })
   publicDate?: Date;
 
   @ValidateNested()
@@ -59,5 +62,6 @@ export class UpdatePostDto {
   @IsValidPostCombination({
     message: 'Invalid combination of PostType',
   })
+  @ApiProperty()
   extraProperty?: PostExtraPropertyDto;
 }

@@ -1,0 +1,10 @@
+<h2>Привет, {{subscriber.name}}!!!</h2>
+Новые публикации пользователей:<br />
+<ul class='post-list'>
+  {{#each posts}}
+    <li>
+      {{this.extraProperty.name}}
+      <a href='http://localhost:3000/api/blog/{{this.id}}'>{{this.postType}}</a>
+    </li>
+  {{/each}}
+</ul>
