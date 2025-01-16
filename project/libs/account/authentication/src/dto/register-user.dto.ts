@@ -18,5 +18,5 @@ export class RegisterUserDto extends LoginUserDto {
     format: 'binary',
     required: true,
   })
-  public avatar: Express.Multer.File;
+  public avatar?: Express.Multer.File;
 }
