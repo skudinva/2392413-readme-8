@@ -11,7 +11,7 @@ function getPosts() {
     {
       id: FIRST_POST_UUID,
       postType: PostType.Text,
-      userIdFIRST_USER_ID,
+      userId: FIRST_USER_ID,
       isRepost: false,
       originUserId: null,
       originPostId: null,
