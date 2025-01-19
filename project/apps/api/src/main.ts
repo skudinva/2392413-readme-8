@@ -6,7 +6,7 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
+  const GLOBAL_PREFIX = 'api';
   const config = new DocumentBuilder()
     .setTitle('Readme app')
     .setDescription('Readme app API')
@@ -33,14 +33,14 @@ async function bootstrap() {
     )
     .build();
 
-  app.setGlobalPrefix(globalPrefix);
+  app.setGlobalPrefix(GLOBAL_PREFIX);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
   app.useGlobalInterceptors(new RequestIdInterceptor());
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
   );
 }
 

@@ -31,8 +31,8 @@ async function bootstrap() {
       'refreshToken'
     )
     .build();
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+  const GLOBAL_PREFIX = 'api';
+  app.setGlobalPrefix(GLOBAL_PREFIX);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -41,7 +41,7 @@ async function bootstrap() {
   const port = configService.get('application.port');
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
   );
 }
 
