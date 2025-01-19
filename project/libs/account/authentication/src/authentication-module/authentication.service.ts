@@ -142,7 +142,7 @@ export class AuthenticationService {
     }
 
     const userEntity = await existUser.setPassword(dto.password);
-    this.blogUserRepository.updatePassword(id, userEntity.passwordHash);
+    await this.blogUserRepository.updatePassword(id, userEntity.passwordHash);
     return userEntity;
   }
 }
