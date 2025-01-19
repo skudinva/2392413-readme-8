@@ -2,7 +2,9 @@
   "name": "@project/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint {src,apps,libs,test}/**/*.ts"
+  },
   "private": true,
   "dependencies": {
     "@golevelup/nestjs-rabbitmq": "5.3.0",

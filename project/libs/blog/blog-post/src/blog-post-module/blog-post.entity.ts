@@ -20,7 +20,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public likesCount!: number;
   public commentsCount!: number;
   public extraProperty?: PostExtraProperty;
-  //public comments!: BlogCommentEntity[];
 
   constructor(post?: Post) {
     super();
@@ -44,7 +43,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       likesCount,
       commentsCount,
       extraProperty,
-      //comments,
     } = post;
 
     this.id = id ?? undefined;

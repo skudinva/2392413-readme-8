@@ -1,5 +1,6 @@
 # Последовательность запуска проекта
 
+```
 cp project
 npm install
 cp apps/account/.env-example apps/account/.env
@@ -19,3 +20,6 @@ npx nx run file-vault:serve
 npx nx run account:serve
 npx nx run blog:serve
 npx nx run api:serve
+```
+
+Swagger [Readme app API](http://localhost:3000/spec#/)

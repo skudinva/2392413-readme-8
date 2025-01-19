@@ -19,8 +19,8 @@ export class EmailSubscriberController {
     queue: process.env.RABBIT_QUEUE,
   })
   public async create(subscriber: CreateSubscriberDto) {
-    this.subscriberService.addSubscriber(subscriber);
-    this.mailService.sendNotifyNewSubscriber(subscriber);
+    await this.subscriberService.addSubscriber(subscriber);
+    await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
   @RabbitSubscribe({
@@ -31,8 +31,8 @@ export class EmailSubscriberController {
   public async sendNewPostNotify(dto: NotifyDto) {
     const { posts } = dto;
     const subscribers = await this.subscriberService.getAllSubscribers();
-    subscribers.map((subscriber) => {
-      this.mailService.sendPostsToSubscriber(posts, subscriber.toPOJO());
+    subscribers.map(async (subscriber) => {
+      await this.mailService.sendPostsToSubscriber(posts, subscriber.toPOJO());
     });
   }
 }
