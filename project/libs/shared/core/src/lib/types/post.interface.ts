@@ -16,5 +16,4 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   extraProperty: PostExtraProperty | null;
-  //comments: Comment[];
 }
