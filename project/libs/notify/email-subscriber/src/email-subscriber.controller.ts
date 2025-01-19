@@ -19,8 +19,8 @@ export class EmailSubscriberController {
     queue: process.env.RABBIT_QUEUE,
   })
   public async create(subscriber: CreateSubscriberDto) {
-    this.subscriberService.addSubscriber(subscriber);
-    this.mailService.sendNotifyNewSubscriber(subscriber);
+    await this.subscriberService.addSubscriber(subscriber);
+    await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
   @RabbitSubscribe({
